@@ -6,16 +6,12 @@ import {MessageService} from '../message.service';
 
 @Component({
     selector: 'app-heros',
-    templateUrl: './heros.component.html',
-    styleUrls: ['./heros.component.less']
+    templateUrl: './heroes.component.html',
+    styleUrls: ['./heroes.component.less']
 })
-export class HerosComponent implements OnInit {
+export class HeroesComponent implements OnInit {
 
     heroes: Hero[] = [];
-    selectedHero: Hero = {
-        id: -1,
-        name: 'wait...'
-    };
 
     constructor(private heroService: HeroService, private messageService: MessageService) {
     }
@@ -27,12 +23,6 @@ export class HerosComponent implements OnInit {
 
     ngOnInit(): void {
         this.getHeroes();
-        this.selectedHero = this.heroes[0]
-    }
-
-    onSelect(hero: Hero): void {
-        this.selectedHero = hero;
-        this.messageService.add(`HeroesComponent: Selected hero id=${hero.id}`);
     }
 
 }
