@@ -1,5 +1,4 @@
-use actix_web::{App, get, HttpResponse, HttpServer, post, Responder, web, Result};
-
+use actix_web::{App, get, HttpResponse, HttpServer, post, Responder, Result, web};
 use serde::{Deserialize, Serialize};
 
 #[get("/")]
