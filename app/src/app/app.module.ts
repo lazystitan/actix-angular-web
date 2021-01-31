@@ -10,6 +10,8 @@ import {MessagesComponent} from './messages/messages.component';
 import {AppRoutingModule} from './app-routing.module';
 import {DashboardComponent} from './dashboard/dashboard.component';
 import {APIInterceptorInterceptor} from './apiinterceptor.interceptor';
+import {PostCardComponent} from './post-card/post-card.component';
+import {PostListComponent} from './post-list/post-list.component';
 
 @NgModule({
     declarations: [
@@ -17,7 +19,9 @@ import {APIInterceptorInterceptor} from './apiinterceptor.interceptor';
         HeroesComponent,
         HeroDetailComponent,
         MessagesComponent,
-        DashboardComponent
+        DashboardComponent,
+        PostCardComponent,
+        PostListComponent
     ],
     imports: [
         BrowserModule,
