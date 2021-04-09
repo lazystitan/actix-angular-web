@@ -3,6 +3,6 @@ export interface Post {
   title: string,
   author: string,
   content: string,
-  createTime: string,
-  lastUpdateTime: string
+  create_time: string,
+  last_update_time: string
 }

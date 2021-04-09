@@ -1,1 +1,13 @@
-<p>post works!</p>
+<button (click)="goBack()">go back</button>
+<h2>{{post.title}}</h2>
+<div class="post-meta-before">
+  <p>{{post.author}}</p>
+</div>
+<div class="content">
+  <p>{{post.content}}</p>
+</div>
+<div class="post-meta-after">
+  <p>{{post.create_time}}</p>
+  <p>{{post.last_update_time}}</p>
+</div>
+<button (click)="goBack()">go back</button>

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 
-import {POSTS} from '../mock-posts';
+import {PostService} from "../posts/post.service";
+import {Post} from "../post";
 
 @Component({
   selector: 'app-post-list',
@@ -9,12 +10,19 @@ import {POSTS} from '../mock-posts';
 })
 export class PostListComponent implements OnInit {
 
-  posts = POSTS;
+  posts:Post[] = [];
 
-  constructor() {
+  constructor(
+    private postService: PostService
+  ) {
   }
 
   ngOnInit(): void {
+    this.getPosts()
+  }
+
+  getPosts():void {
+    this.postService.getPosts().subscribe(posts => this.posts = posts)
   }
 
 }

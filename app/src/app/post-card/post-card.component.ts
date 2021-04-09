@@ -14,8 +14,8 @@ export class PostCardComponent implements OnInit {
     title: '',
     author: '',
     content: ``,
-    createTime: '',
-    lastUpdateTime: ''
+    create_time: '',
+    last_update_time: ''
   };
 
   constructor() {

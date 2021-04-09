@@ -35,8 +35,8 @@ export class PostService {
         id: 0,
         author: "",
         content: "",
-        createTime: "",
-        lastUpdateTime: "",
+        create_time: "",
+        last_update_time: "",
         title: ""
       });
     }

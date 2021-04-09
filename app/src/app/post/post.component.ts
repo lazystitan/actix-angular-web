@@ -14,9 +14,9 @@ export class PostComponent implements OnInit {
   @Input() post: Post = {
     author: "",
     content: "",
-    createTime: "",
+    create_time: "",
     id: 0,
-    lastUpdateTime: "",
+    last_update_time: "",
     title: ""
   }
 
