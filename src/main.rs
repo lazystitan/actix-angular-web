@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[get("/")]
 async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world!")
+    HttpResponse::Ok().body("Hello world! This is riton!")
 }
 
 #[post("/echo")]

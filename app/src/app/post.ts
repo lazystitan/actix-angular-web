@@ -1,7 +1,8 @@
 export interface Post {
-    title: string,
-    author: string,
-    content: string,
-    createTime: string,
-    lastUpdateTime: string
+  id: number,
+  title: string,
+  author: string,
+  content: string,
+  createTime: string,
+  lastUpdateTime: string
 }

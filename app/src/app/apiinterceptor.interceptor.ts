@@ -5,11 +5,11 @@ import {Observable} from 'rxjs';
 @Injectable()
 export class APIInterceptorInterceptor implements HttpInterceptor {
 
-    constructor() {
-    }
+  constructor() {
+  }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const apiReq = request.clone({url: `http://localhost:8080/${request.url}`});
-        return next.handle(apiReq);
-    }
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const apiReq = request.clone({url: `http://localhost:8080/${request.url}`});
+    return next.handle(apiReq);
+  }
 }
