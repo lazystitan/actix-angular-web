@@ -6,10 +6,12 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AppComponent} from './app.component';
 import {MessagesComponent} from './messages/messages.component';
 import {AppRoutingModule} from './app-routing.module';
-import {APIInterceptorInterceptor} from './apiinterceptor.interceptor';
+import {APIInterceptor} from './api.interceptor';
 import {PostCardComponent} from './post-card/post-card.component';
 import {PostListComponent} from './post-list/post-list.component';
 import {PostComponent} from './post/post.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,9 @@ import {PostComponent} from './post/post.component';
     MessagesComponent,
     PostCardComponent,
     PostListComponent,
-    PostComponent
+    PostComponent,
+    HeaderComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,7 @@ import {PostComponent} from './post/post.component';
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
-    useClass: APIInterceptorInterceptor,
+    useClass: APIInterceptor,
     multi: true,
   }],
   bootstrap: [AppComponent]

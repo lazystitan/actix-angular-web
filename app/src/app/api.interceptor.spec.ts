@@ -1,6 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 
-import {APIInterceptorInterceptor} from './apiinterceptor.interceptor';
+import {APIInterceptorInterceptor} from './api.interceptor';
 
 describe('APIInterceptorInterceptor', () => {
   beforeEach(() => TestBed.configureTestingModule({

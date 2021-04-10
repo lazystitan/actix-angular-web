@@ -20,6 +20,7 @@ export class PostService {
   }
 
   private postsUrl = 'posts';
+  private postUrl = 'post';
 
   getPosts(): Observable<Post[]> {
     this.log('PostService: fetched posts')
@@ -28,17 +29,6 @@ export class PostService {
 
   getPost(id:Number): Observable<Post> {
     this.messageService.add(`PostService: fetched post id=${id}`);
-    if (POSTS.find(post => post.id === id) !== undefined) {
-      return of(POSTS.find(post => post.id === id) as Post);
-    } else {
-      return of({
-        id: 0,
-        author: "",
-        content: "",
-        create_time: "",
-        last_update_time: "",
-        title: ""
-      });
-    }
+    return this.http.get<Post>(this.postUrl + `/${id}`)
   }
 }
