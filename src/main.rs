@@ -6,6 +6,7 @@ pub mod schema;
 pub mod models;
 pub mod db;
 pub mod api;
+pub mod error;
 
 use actix_web::{App, HttpServer};
 

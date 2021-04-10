@@ -1,17 +1,8 @@
 extern crate derive_more;
 
-use actix_web::{get, HttpResponse, post, Responder, Result, web, error};
+use actix_web::{get, HttpResponse, post, Responder, Result, web};
 use crate::db::{get_posts, get_post};
-use derive_more::{Display, Error};
-
-#[derive(Debug, Display, Error)]
-#[display(fmt = "api error: code => {}, message => {}", code, message)]
-struct ApiError {
-    code: i32,
-    message: String
-}
-
-impl error::ResponseError for ApiError {}
+use crate::error::ApiError;
 
 #[get("/")]
 async fn hello() -> impl Responder {
