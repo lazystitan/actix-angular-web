@@ -6,8 +6,8 @@ pub mod models;
 pub mod db;
 pub mod api;
 
-use actix_web::{App, get, HttpResponse, HttpServer, post, Responder, Result, web};
-use db::*;
+use actix_web::{App, HttpServer};
+
 use api::config;
 
 #[actix_web::main]
