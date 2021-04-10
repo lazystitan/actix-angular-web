@@ -1,5 +1,17 @@
-use actix_web::{get, HttpResponse, post, Responder, Result, web};
+extern crate derive_more;
+
+use actix_web::{get, HttpResponse, post, Responder, Result, web, error};
 use crate::db::{get_posts, get_post};
+use derive_more::{Display, Error};
+
+#[derive(Debug, Display, Error)]
+#[display(fmt = "api error: code => {}, message => {}", code, message)]
+struct ApiError {
+    code: i32,
+    message: String
+}
+
+impl error::ResponseError for ApiError {}
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -16,21 +28,33 @@ async fn manual_hello() -> impl Responder {
 }
 
 #[get("/posts")]
-async fn posts() -> Result<HttpResponse> {
-    let posts = get_posts();
-    Ok(HttpResponse::Ok()
-        .header("Access-Control-Allow-Origin","*")
-        .json(posts)
-    )
+async fn posts() -> Result<HttpResponse, ApiError> {
+    let posts_result = get_posts();
+    match posts_result {
+        Ok(posts) => Ok(HttpResponse::Ok()
+            .header("Access-Control-Allow-Origin", "*")
+            .json(posts)),
+        Err(error) => Err(ApiError {
+            code: 1,
+            message: error.to_string()
+        })
+    }
 }
 
 #[get("/post/{post_id}")]
-async fn post(web::Path(post_id) : web::Path<i32>) -> Result<HttpResponse> {
+async fn post(web::Path(post_id) : web::Path<i32>) -> Result<HttpResponse, ApiError> {
     let post = get_post(post_id);
-    Ok(HttpResponse::Ok()
-        .header("Access-Control-Allow-Origin","*")
-        .json(post)
-    )
+    match post {
+        Ok(post) => Ok(HttpResponse::Ok()
+            .header("Access-Control-Allow-Origin","*")
+            .json(post)
+        ),
+        Err(error) => Err(ApiError {
+            code: 0,
+            message: error.to_string()
+        })
+    }
+
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
