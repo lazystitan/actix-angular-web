@@ -1,16 +1,13 @@
-use super::schema::posts;
+use serde::{Deserialize, Serialize};
+use chrono::NaiveDateTime;
 
-#[derive(Queryable)]
+#[derive(Queryable, Deserialize, Serialize)]
 pub struct Post {
     pub id: i32,
     pub title: String,
-    pub body: String,
+    pub author: String,
+    pub content: String,
     pub published: bool,
-}
-
-#[derive(Insertable)]
-#[table_name = "posts"]
-pub struct NewPost<'a> {
-    pub title: &'a str,
-    pub body: &'a str,
+    pub create_time: NaiveDateTime,
+    pub last_update_time: NaiveDateTime,
 }
