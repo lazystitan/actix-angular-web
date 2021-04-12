@@ -61,7 +61,7 @@ async fn index() -> Result<HttpResponse> {
 
 }
 
-#[get("/{filename:.*}")]
+#[get("/{filename:.+\\.(css|js|icon)}")]
 async fn static_file(req : HttpRequest) -> Result<HttpResponse> {
     let mut full_path = "./app/dist/app/".to_owned();
     let file_name = req.match_info().query("filename");
