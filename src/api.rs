@@ -1,13 +1,11 @@
 extern crate derive_more;
 
-use actix_web::{get, HttpResponse, post, Responder, Result, web};
+use actix_web::{get, HttpResponse, post, Responder, Result, web, HttpRequest};
 use crate::db::{get_posts, get_post};
 use crate::error::ApiError;
-
-#[get("/")]
-async fn hello() -> impl Responder {
-    HttpResponse::Ok().body("Hello world! This is riton!")
-}
+use std::path::Path;
+use std::fs::File;
+use std::io::Read;
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
@@ -47,11 +45,45 @@ async fn post(web::Path(post_id) : web::Path<i32>) -> Result<HttpResponse, ApiEr
     }
 
 }
+#[get("/")]
+async fn index() -> Result<HttpResponse> {
+    let index_path = Path::new("/var/www/http/actix-angular-web/app/dist/app/index.html");
+    let mut file = match File::open(&index_path) {
+        Ok(file) => file,
+        Err(why) => panic!("index not found! {} {}", index_path.display(), why)
+    };
+
+    let mut index_content = String::new();
+    match file.read_to_string(&mut index_content) {
+        Ok(_) => Ok(HttpResponse::Ok().body(index_content)),
+        Err(why) => panic!("index read failed! {}", why)
+    }
+
+}
+
+#[get("/{filename:.*}")]
+async fn static_file(req : HttpRequest) -> Result<HttpResponse> {
+    let mut full_path = "/var/www/http/actix-angular-web/app/dist/app/".to_owned();
+    let file_name = req.match_info().query("filename");
+    full_path.push_str(file_name);
+    let path = Path::new(&full_path);
+    let mut file = match File::open(&path) {
+        Ok(file) => file,
+        Err(why) => panic!("{} not found! {} {}", file_name, path.display(), why)
+    };
+
+    let mut content = String::new();
+    match file.read_to_string(&mut content) {
+        Ok(_) => Ok(HttpResponse::Ok().body(content)),
+        Err(why) => panic!("index read failed! {}", why)
+    }
+}
 
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(hello)
+    cfg.service(index)
         .service(echo)
         .route("/hey", web::get().to(manual_hello))
         .service(posts)
-        .service(post);
+        .service(post)
+        .service(static_file);
 }
