@@ -9,7 +9,7 @@ export class APIInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const apiReq = request.clone({url: `http://localhost:8080/${request.url}`});
+    const apiReq = request.clone({url: `http://localhost:8080/apis/${request.url}`});
     return next.handle(apiReq);
   }
 }

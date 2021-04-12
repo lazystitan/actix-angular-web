@@ -47,7 +47,7 @@ async fn post(web::Path(post_id) : web::Path<i32>) -> Result<HttpResponse, ApiEr
 }
 #[get("/")]
 async fn index() -> Result<HttpResponse> {
-    let index_path = Path::new("/var/www/http/actix-angular-web/app/dist/app/index.html");
+    let index_path = Path::new("./app/dist/app/index.html");
     let mut file = match File::open(&index_path) {
         Ok(file) => file,
         Err(why) => panic!("index not found! {} {}", index_path.display(), why)
@@ -63,7 +63,7 @@ async fn index() -> Result<HttpResponse> {
 
 #[get("/{filename:.*}")]
 async fn static_file(req : HttpRequest) -> Result<HttpResponse> {
-    let mut full_path = "/var/www/http/actix-angular-web/app/dist/app/".to_owned();
+    let mut full_path = "./app/dist/app/".to_owned();
     let file_name = req.match_info().query("filename");
     full_path.push_str(file_name);
     let path = Path::new(&full_path);
@@ -75,15 +75,17 @@ async fn static_file(req : HttpRequest) -> Result<HttpResponse> {
     let mut content = String::new();
     match file.read_to_string(&mut content) {
         Ok(_) => Ok(HttpResponse::Ok().body(content)),
-        Err(why) => panic!("index read failed! {}", why)
+        Err(why) => panic!("index read failed! {} {}", file_name, why)
     }
 }
 
+
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(index)
-        .service(echo)
-        .route("/hey", web::get().to(manual_hello))
-        .service(posts)
-        .service(post)
+    cfg.service(
+            web::scope("/apis")
+                .service(posts)
+                .service(post)
+        )
+        .service(index)
         .service(static_file);
 }
