@@ -13,3 +13,5 @@ diesel = { version = "1.4.4", features = ["postgres", "chrono"]}
 dotenv = "0.15.0"
 chrono = { version = "0.4", features = ["serde"] }
 derive_more = { version = "0.99.0", default-features = false, features = ["display", "error"] }
+log = "0.4"
+log4rs = { version = "1.0" }
