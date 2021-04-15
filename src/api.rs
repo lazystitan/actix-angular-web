@@ -20,9 +20,7 @@ async fn manual_hello() -> impl Responder {
 async fn posts() -> Result<HttpResponse, ApiError> {
     let posts_result = get_posts();
     match posts_result {
-        Ok(posts) => Ok(HttpResponse::Ok()
-            .header("Access-Control-Allow-Origin", "*")
-            .json(posts)),
+        Ok(posts) => Ok(HttpResponse::Ok().json(posts)),
         Err(error) => Err(ApiError {
             code: 1,
             message: error.to_string()
@@ -34,10 +32,7 @@ async fn posts() -> Result<HttpResponse, ApiError> {
 async fn post(web::Path(post_id) : web::Path<i32>) -> Result<HttpResponse, ApiError> {
     let post = get_post(post_id);
     match post {
-        Ok(post) => Ok(HttpResponse::Ok()
-            .header("Access-Control-Allow-Origin","*")
-            .json(post)
-        ),
+        Ok(post) => Ok(HttpResponse::Ok().json(post)),
         Err(error) => Err(ApiError {
             code: 0,
             message: error.to_string()
@@ -79,6 +74,15 @@ async fn static_file(req : HttpRequest) -> Result<HttpResponse> {
     }
 }
 
+#[get("/panic/{flag}")]
+async fn panic_sim(web::Path(flag) : web::Path<bool>) -> Result<HttpResponse, ApiError> {
+    if flag {
+        Ok(HttpResponse::InternalServerError().finish())
+    } else {
+        Ok(HttpResponse::Ok().body("not panic"))
+    }
+}
+
 
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(
@@ -87,5 +91,6 @@ pub fn config(cfg: &mut web::ServiceConfig) {
                 .service(post)
         )
         .service(index)
-        .service(static_file);
+        .service(static_file)
+        .service(panic_sim);
 }

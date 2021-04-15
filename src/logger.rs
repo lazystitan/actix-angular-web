@@ -1,30 +1,31 @@
+use log::{trace, info, warn};
 use std::env;
 use chrono::prelude::*;
 use log4rs;
 use std::io::ErrorKind;
 
-struct Logger<'a> {
+pub struct Logger<'a> {
     name : &'a str
 }
 
 impl<'a> Logger<'a> {
-    fn init_config() {
+    pub fn init_config() {
         log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap_or_else(|e| {
             panic!("init logger file failed: {:?}", e);
         });
     }
-    fn new(name : &'a str) -> Self {
+    pub fn new(name : &'a str) -> Self {
         Self { name }
     }
-    fn trace(&self, from : &str, message : &str) {
+    pub fn trace(&self, from : &str, message : &str) {
         trace!("{} from {} with {}",self.name, from, message)
     }
 
-    fn info(&self, from : &str, message : &str) {
+    pub fn info(&self, from : &str, message : &str) {
         info!("{} from {} with {}",self.name, from, message)
     }
 
-    fn warn(&self, from : &str, message : &str) {
+    pub fn warn(&self, from : &str, message : &str) {
         warn!("{} from {} with {}",self.name, from, message)
     }
 }

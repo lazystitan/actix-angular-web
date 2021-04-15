@@ -27,7 +27,7 @@ cargo run
 
 - [x] Basic front and back show blogs
 - [ ] Deploy script
-- [ ] Log system
+- [x] Simple log system
 - [ ] Cache system
 - [ ] Database connection pool
 - [ ] Containerization
