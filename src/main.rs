@@ -8,25 +8,12 @@ pub mod logger;
 pub mod models;
 pub mod schema;
 
-use actix_web::{dev, http, middleware, App, HttpServer};
-
-use actix_web::middleware::errhandlers::{ErrorHandlerResponse, ErrorHandlers};
+use actix_web::{middleware, App, HttpServer};
 use actix_web::middleware::Logger;
 use api::config;
-use diesel::pg::Pg;
-use diesel::r2d2::{self, ConnectionManager};
-use diesel::PgConnection;
-use std::env;
+use diesel::{r2d2, PgConnection, r2d2::ConnectionManager};
 
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
-
-fn render_500<B>(mut res: dev::ServiceResponse<B>) -> actix_web::Result<ErrorHandlerResponse<B>> {
-    res.response_mut().headers_mut().insert(
-        http::header::CONTENT_TYPE,
-        http::HeaderValue::from_static("Error"),
-    );
-    Ok(ErrorHandlerResponse::Response(res))
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -39,7 +26,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(middleware::DefaultHeaders::new().header("Access-Control-Allow-Origin", "*"))
-            .wrap(ErrorHandlers::new().handler(http::StatusCode::INTERNAL_SERVER_ERROR, render_500))
+            .wrap(error::get_error_handlers())
             .configure(config)
     })
     .bind("127.0.0.1:8080")?

@@ -1,8 +1,5 @@
-use chrono::prelude::*;
 use log::{info, trace, warn};
 use log4rs;
-use std::env;
-use std::io::ErrorKind;
 
 pub struct Logger<'a> {
     name: &'a str,

@@ -29,7 +29,7 @@ cargo run
 - [ ] Deploy script
 - [x] Simple log system
 - [ ] Cache system
-- [ ] Database connection pool
+- [x] Database connection pool
 - [ ] Containerization
 - [ ] Comment and github OAuth
 

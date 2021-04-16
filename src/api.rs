@@ -92,5 +92,7 @@ pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/apis").service(posts).service(post))
         .service(index)
         .service(static_file)
+        .service(echo)
+        .route("/hello", web::get().to(manual_hello))
         .service(panic_sim);
 }
