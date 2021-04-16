@@ -5,7 +5,7 @@ use derive_more::{Display, Error};
 #[display(fmt = "api error: code => {}, message => {}", code, message)]
 pub struct ApiError {
     pub code: i32,
-    pub message: String
+    pub message: String,
 }
 
 impl error::ResponseError for ApiError {}

@@ -1,11 +1,11 @@
-use log::{trace, info, warn};
-use std::env;
 use chrono::prelude::*;
+use log::{info, trace, warn};
 use log4rs;
+use std::env;
 use std::io::ErrorKind;
 
 pub struct Logger<'a> {
-    name : &'a str
+    name: &'a str,
 }
 
 impl<'a> Logger<'a> {
@@ -14,19 +14,19 @@ impl<'a> Logger<'a> {
             panic!("init logger file failed: {:?}", e);
         });
     }
-    pub fn new(name : &'a str) -> Self {
+    pub fn new(name: &'a str) -> Self {
         Self { name }
     }
-    pub fn trace(&self, from : &str, message : &str) {
-        trace!("{} from {} with {}",self.name, from, message)
+    pub fn trace(&self, from: &str, message: &str) {
+        trace!("{} from {} with {}", self.name, from, message)
     }
 
-    pub fn info(&self, from : &str, message : &str) {
-        info!("{} from {} with {}",self.name, from, message)
+    pub fn info(&self, from: &str, message: &str) {
+        info!("{} from {} with {}", self.name, from, message)
     }
 
-    pub fn warn(&self, from : &str, message : &str) {
-        warn!("{} from {} with {}",self.name, from, message)
+    pub fn warn(&self, from: &str, message: &str) {
+        warn!("{} from {} with {}", self.name, from, message)
     }
 }
 
@@ -50,5 +50,4 @@ mod test {
         user_logger.info("user", "cannot find user");
         user_logger.warn("user", &format!("cannot find user {} password", "riton"));
     }
-
 }
