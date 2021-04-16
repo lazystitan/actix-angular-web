@@ -13,19 +13,17 @@ fn establish_connection() -> PgConnection {
         .expect(&format!("Error connecting to {}", database_url))
 }
 
-pub fn get_posts() -> Result<Vec<Post>, Error> {
-    let connection = establish_connection();
+pub fn get_posts(connection : &diesel::PgConnection) -> Result<Vec<Post>, Error> {
     let results = posts.filter(published.eq(true))
-        .load::<Post>(&connection);
+        .load::<Post>(connection);
         // .expect("Error loading posts");
     return results;
 }
 
-pub fn get_post(post_id : i32) -> Result<Post, Error> {
-    let connection = establish_connection();
+pub fn get_post(post_id : i32, connection : &diesel::PgConnection) -> Result<Post, Error> {
     let result = posts.filter(published.eq(true))
         .filter(id.eq(post_id))
-        .first::<Post>(&connection);
+        .first::<Post>(connection);
     return result;
 }
 
