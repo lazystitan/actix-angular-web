@@ -1,0 +1,15 @@
+.git
+/.idea
+target
+!target/x86_64-unknown-linux-musl/release
+!target/deploy
+
+/target
+/.idea
+Cargo.lock
+
+/app/dist
+/app/node_modules
+
+/sql
+/log
