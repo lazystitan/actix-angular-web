@@ -6,11 +6,13 @@ use std::env;
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 pub fn build_db_conn_pool() -> DbPool {
-    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let database_url = env::var("DATABASE_URL_DEV").expect("DATABASE_URL must be set");
     let manager = ConnectionManager::<PgConnection>::new(database_url);
     let pool = r2d2::Pool::builder()
         .build(manager)
-        .expect("Failed to create pool.");
+        .unwrap_or_else(|e|
+            panic!("Failed to create pool {:?}", e)
+        );
     pool
 }
 

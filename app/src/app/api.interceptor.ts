@@ -10,7 +10,16 @@ export class APIInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const apiReq = request.clone({url: `http://${environment.backenUrl}/apis/${request.url}`});
+    let protocal = document.location.protocol;
+    let port = '';
+    if (protocal == 'https:' && !environment.production) {
+      port = ':8083';
+    } else if (protocal == 'http:' && !environment.production) {
+      port = ':8080';
+    }
+    let backenUrl = environment.backenUrl;
+
+    const apiReq = request.clone({url: `${protocal}//${backenUrl}${port}/apis/${request.url}`});
     return next.handle(apiReq);
   }
 }
