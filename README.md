@@ -30,7 +30,7 @@ cargo run
 - [x] Simple log system
 - [ ] Cache system
 - [x] Database connection pool
-- [ ] Containerization
+- [x] Containerization
 - [ ] Comment and github OAuth
 
 ### 
