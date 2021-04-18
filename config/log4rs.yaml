@@ -1,11 +1,22 @@
 refresh_rate: 30 seconds
 appenders:
-  file:
+  stdout:
+    kind: console
+  requests:
     kind: file
     path: "log/requests.log"
+    filters:
+      - kind: request_filter
+        request_field: api
     encoder:
       pattern: "{d} {l} {t} - {m}{n}"
 root:
-  level: trace
+  level: info
   appenders:
-    - file
+    - stdout
+loggers:
+  requests_logger:
+    level: info
+    appenders:
+      - requests
+    additive: false

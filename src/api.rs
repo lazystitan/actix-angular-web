@@ -18,6 +18,7 @@ async fn manual_hello() -> impl Responder {
 
 #[get("/posts")]
 async fn posts(pool: web::Data<DbPool>) -> Result<HttpResponse, ApiError> {
+    info!("get posts");
     let conn = pool.get().expect("couldn't get db connection from pool");
     let posts_result = web::block(move || db::get_posts(&conn)).await.map_err(|e| {
         eprintln!("{:?}", e);
