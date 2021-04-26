@@ -9,6 +9,7 @@ export class FooterComponent implements OnInit {
 
   email = "ritonelion@outlook.com"
   github_url = "//github.com/lazystitan"
+  record_url = "http://beian.miit.gov.cn/"
 
   constructor() { }
 
