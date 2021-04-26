@@ -14,11 +14,8 @@ pub mod schema;
 use actix_web::{middleware, App, HttpServer};
 use actix_web::middleware::Logger;
 use api::config;
-use diesel::{r2d2, PgConnection, r2d2::ConnectionManager};
 use std::{io, fs, env};
 use rustls::internal::pemfile;
-
-type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -38,7 +35,7 @@ async fn main() -> std::io::Result<()> {
     println!("env init success!");
 
     //init db
-    let db_pool = db::build_db_conn_pool(stage);
+    let db_pool = db::DataService::new(stage);
     println!("db pool init success!");
 
     //init ssl

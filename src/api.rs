@@ -6,7 +6,7 @@ use std::path::Path;
 
 use actix_web::{get, HttpRequest, HttpResponse, post, Responder, Result, web};
 
-use crate::{db, DbPool};
+use crate::db;
 use crate::error::ApiError;
 
 #[post("/echo")]
@@ -19,10 +19,9 @@ async fn manual_hello() -> impl Responder {
 }
 
 #[get("/posts")]
-async fn posts(pool: web::Data<DbPool>) -> Result<HttpResponse, ApiError> {
+async fn posts(data_service: web::Data<db::DataService>) -> Result<HttpResponse, ApiError> {
     info!("get posts");
-    let conn = pool.get().expect("couldn't get db connection from pool");
-    let posts_result = web::block(move || db::get_posts(&conn)).await.map_err(|e| {
+    let posts_result = web::block(move || data_service.get_posts()).await.map_err(|e| {
         eprintln!("{:?}", e);
         HttpResponse::InternalServerError().finish()
     });
@@ -34,11 +33,10 @@ async fn posts(pool: web::Data<DbPool>) -> Result<HttpResponse, ApiError> {
 
 #[get("/post/{post_id}")]
 async fn post(
-    pool: web::Data<DbPool>,
+    data_service: web::Data<db::DataService>,
     web::Path(post_id): web::Path<i32>,
 ) -> Result<HttpResponse, ApiError> {
-    let conn = pool.get().expect("couldn't get db connection from pool");
-    let post = web::block(move || db::get_post(post_id, &conn))
+    let post = web::block(move || data_service.get_post(post_id))
         .await
         .map_err(|e| {
             eprintln!("{:?}", e);
