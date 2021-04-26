@@ -1,11 +1,13 @@
 extern crate derive_more;
 
-use crate::error::ApiError;
-use crate::{db, DbPool};
-use actix_web::{get, post, web, HttpRequest, HttpResponse, Responder, Result};
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
+
+use actix_web::{get, HttpRequest, HttpResponse, post, Responder, Result, web};
+
+use crate::{db, DbPool};
+use crate::error::ApiError;
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
@@ -47,7 +49,8 @@ async fn post(
         Err(error) => Ok(error),
     }
 }
-#[get("/")]
+
+#[get("/{route:.*}")]
 async fn index() -> Result<HttpResponse> {
     let index_path = Path::new("./app/dist/app/index.html");
     let mut file = match File::open(&index_path) {
@@ -62,6 +65,7 @@ async fn index() -> Result<HttpResponse> {
     }
 }
 
+//the static files has been built
 #[get("/{filename:.+\\.(css|js|icon)}")]
 async fn static_file(req: HttpRequest) -> Result<HttpResponse> {
     let mut full_path = "./app/dist/app/".to_owned();
@@ -90,10 +94,13 @@ async fn panic_sim(web::Path(flag): web::Path<bool>) -> Result<HttpResponse, Api
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/apis").service(posts).service(post))
-        .service(index)
-        .service(static_file)
-        .service(echo)
-        .route("/hello", web::get().to(manual_hello))
-        .service(panic_sim);
+    cfg.service(web::scope("/apis")
+        .service(posts)
+        .service(post)
+    )
+    .service(static_file)
+    .service(index)
+    .service(echo)
+    .route("/hello", web::get().to(manual_hello))
+    .service(panic_sim);
 }
