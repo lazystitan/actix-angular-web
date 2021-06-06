@@ -14,5 +14,5 @@ RUN apt-get update && apt-get update && apt-get install -y libpq5 && mkdir log
 COPY ./.env /var/www/http/
 COPY ./config /var/www/http/config
 COPY --from=backen /var/www/http/bin/ ./bin/
-COPY --from=front /var/www/http/app/dist/app/ ./app/dist/
+COPY --from=front /var/www/http/app/dist/app/ ./app/dist/app/
 
