@@ -11,7 +11,6 @@ RUN cd ./app && npm config set registry=http://registry.npm.taobao.org && npm in
 FROM ubuntu:20.10 as production
 WORKDIR /var/www/http/
 RUN apt-get update && apt-get update && apt-get install -y libpq5 && mkdir log
-COPY ../ssl/* /var/www/http/ssl/
 COPY ./.env /var/www/http/
 COPY ./config /var/www/http/config
 COPY --from=backen /var/www/http/bin/ ./bin/
