@@ -4,15 +4,15 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
-import {MessagesComponent} from './messages/messages.component';
-import {AppRoutingModule} from './app-routing.module';
+import {MessagesComponent} from './component/messages/messages.component';
+import {AppRoutingModule} from './routes/app-routing.module';
 import {APIInterceptor} from './api.interceptor';
-import {PostCardComponent} from './post-card/post-card.component';
-import {PostListComponent} from './post-list/post-list.component';
-import {PostComponent} from './post/post.component';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
-import { LoginComponent } from './login/login.component';
+import {PostCardComponent} from './component/post-card/post-card.component';
+import {PostListComponent} from './component/post-list/post-list.component';
+import {PostComponent} from './component/post/post.component';
+import { HeaderComponent } from './component/header/header.component';
+import { FooterComponent } from './component/footer/footer.component';
+import { LoginComponent } from './component/login/login.component';
 
 @NgModule({
   declarations: [

@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {PostComponent} from "./post/post.component";
-import {PostListComponent} from "./post-list/post-list.component";
-import {LoginComponent} from "./login/login.component";
+import {PostComponent} from "../component/post/post.component";
+import {PostListComponent} from "../component/post-list/post-list.component";
+import {LoginComponent} from "../component/login/login.component";
 
 const routes: Routes = [
   {path: '', redirectTo: '/posts', pathMatch: 'full'},
