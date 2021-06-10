@@ -50,7 +50,7 @@ async fn post(
 
 #[get("/{route:.*}")]
 async fn index() -> Result<HttpResponse> {
-    let index_path = Path::new("./app/dist/app/index.html");
+    let index_path = Path::new("../app/dist/app/index.html");
     let mut file = match File::open(&index_path) {
         Ok(file) => file,
         Err(why) => panic!("index not found! {} {}", index_path.display(), why),
@@ -66,7 +66,7 @@ async fn index() -> Result<HttpResponse> {
 //the static files has been built
 #[get("/{filename:.+\\.(css|js|icon)}")]
 async fn static_file(req: HttpRequest) -> Result<HttpResponse> {
-    let mut full_path = "./app/dist/app/".to_owned();
+    let mut full_path = "../app/dist/app/".to_owned();
     let file_name = req.match_info().query("filename");
     full_path.push_str(file_name);
     let path = Path::new(&full_path);
