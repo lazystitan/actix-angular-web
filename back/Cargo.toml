@@ -1,6 +1,6 @@
 [package]
 name = "actix-angular-web"
-version = "0.11.0"
+version = "0.12.0"
 authors = ["riton"]
 edition = "2018"
 
@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 actix-web = { version = "3.3", features = ["rustls"] }
+actix-session = "0.4"
 serde  = "1"
 diesel = { version = "1.4.4", features = ["postgres", "chrono", "r2d2"]}
 dotenv = "0.15.0"

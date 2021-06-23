@@ -11,3 +11,18 @@ pub struct Post {
     pub create_time: NaiveDateTime,
     pub last_update_time: NaiveDateTime,
 }
+
+#[derive(Deserialize)]
+pub struct LoginFormData {
+    pub username: String,
+    pub password: String
+}
+
+
+#[derive(Deserialize)]
+pub struct PostInsert {
+    pub title: String,
+    // pub author: String,
+    pub content: String,
+    // pub published: bool,
+}

@@ -1,6 +1,6 @@
-use crate::models::Post;
+use crate::models::{Post, PostInsert};
 use crate::schema::posts::dsl::*;
-use diesel::{prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, PgConnection};
+use diesel::{prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, PgConnection, insert_into};
 use std::env;
 
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
@@ -45,4 +45,31 @@ impl DataService {
         return result;
     }
 
+    pub fn add_post(&self, post: PostInsert) -> Result<(), Error> {
+        let connection = &self.conn();
+        insert_into(posts)
+            .values(
+                (
+                    title.eq(post.title),
+                    author.eq("riton"),
+                    content.eq(post.content),
+                    published.eq(true)
+                )
+            ).execute(connection);
+        Ok(())
+    }
+
+}
+
+#[cfg(test)]
+mod db_test {
+
+    use super::*;
+
+    #[test]
+    fn insert_test() {
+        dotenv::dotenv().ok();
+        let pool = DataService::new("dev");
+        pool.add_post();
+    }
 }

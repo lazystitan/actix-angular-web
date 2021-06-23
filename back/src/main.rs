@@ -13,6 +13,7 @@ pub mod schema;
 
 use actix_web::{middleware, App, HttpServer};
 use actix_web::middleware::Logger;
+use actix_session::{CookieSession, Session};
 use api::config;
 use std::{io, fs, env};
 use rustls::internal::pemfile;
@@ -55,6 +56,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(middleware::DefaultHeaders::new().header("Access-Control-Allow-Origin", "*"))
             .wrap(error::get_error_handlers())
+            .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .configure(config)
     })
     .bind("0.0.0.0:8080")?

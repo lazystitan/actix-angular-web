@@ -8,6 +8,8 @@ use actix_web::{get, HttpRequest, HttpResponse, post, Responder, Result, web};
 
 use crate::db;
 use crate::error::ApiError;
+use actix_session::Session;
+use crate::models::{PostInsert, LoginFormData};
 
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
@@ -45,6 +47,16 @@ async fn post(
     match post {
         Ok(post) => Ok(HttpResponse::Ok().json(post)),
         Err(error) => Ok(error),
+    }
+}
+
+#[post("/post")]
+async fn add_post(data_service: web::Data<db::DataService>, form: web::Form<PostInsert>) -> Result<HttpResponse> {
+    let post_insert = form.0;
+    let res = data_service.add_post(post_insert);
+    match res {
+        Ok(_) => Ok(HttpResponse::Ok().body("ok")),
+        Err(_) => Ok(HttpResponse::Ok().body("nok"))
     }
 }
 
@@ -91,10 +103,35 @@ async fn panic_sim(web::Path(flag): web::Path<bool>) -> Result<HttpResponse, Api
     }
 }
 
+#[get("/session/add")]
+async fn add_counter(session : Session) -> Result<HttpResponse> {
+    if let Some(count) = session.get::<i32>("counter")? {
+        session.set("counter", count + 1)?;
+    } else {
+        session.set("counter", 1)?;
+    }
+
+
+    Ok(HttpResponse::Ok().body(format!(
+        "Count is {:?}",
+        session.get::<i32>("counter")?.unwrap()
+    )))
+}
+
+#[post("/login")]
+async fn login(form: web::Form<LoginFormData>) -> Result<HttpResponse> {
+    Ok(HttpResponse::Ok().body(format!(
+        "{}-{}", form.username, form.password
+    )))
+}
+
 pub fn config(cfg: &mut web::ServiceConfig) {
     cfg.service(web::scope("/apis")
         .service(posts)
         .service(post)
+        .service(login)
+        .service(add_counter)
+        .service(add_post)
     )
     .service(static_file)
     .service(index)
