@@ -1,0 +1,20 @@
+#working
+POST http://127.0.0.1:8080/apis/post
+Content-Type: application/x-www-form-urlencoded
+
+title=test3&content=this is another test
+
+### not working
+POST http://127.0.0.1:8080/apis/post
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="field-name"
+
+title=test2&content=123
+--WebAppBoundary--
+
+###
+
+
+
