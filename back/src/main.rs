@@ -1,6 +1,5 @@
 #[macro_use]
 extern crate diesel;
-
 #[macro_use]
 extern crate log;
 
@@ -11,9 +10,12 @@ pub mod logger;
 pub mod models;
 pub mod schema;
 
-use actix_web::{middleware, App, HttpServer};
+
+
+use actix_cors::Cors;
+use actix_web::{App, HttpServer};
 use actix_web::middleware::Logger;
-use actix_session::{CookieSession, Session};
+use actix_session::{CookieSession};
 use api::config;
 use std::{io, fs, env};
 use rustls::internal::pemfile;
@@ -21,7 +23,7 @@ use rustls::internal::pemfile;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     //get stage
-    let args:Vec<_> = env::args().collect();
+    let args: Vec<_> = env::args().collect();
     let mut stage = "dev";
     if args.len() >= 2 && args[1] == "--prod" {
         stage = "prod";
@@ -48,19 +50,27 @@ async fn main() -> std::io::Result<()> {
     ssl_config.set_single_cert(cert_chain, keys.remove(0)).unwrap();
     println!("ssl init success!");
 
+    // let cors = Cors::default()
+    //     .allowed_origin("*")
+    //     .allowed_methods(vec!["GET", "POST"])
+    //     .allowed_headers(vec![header::AUTHORIZATION, header::ACCEPT])
+    //     .allowed_header(header::CONTENT_TYPE)
+    //     .max_age(3600);
+
     //init server
     HttpServer::new(move || {
         App::new()
             .data(db_pool.clone())
             // .wrap(Logger::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
-            .wrap(middleware::DefaultHeaders::new().header("Access-Control-Allow-Origin", "*"))
+            // .wrap(middleware::DefaultHeaders::new().header("Access-Control-Allow-Origin", "*"))
+            .wrap(Cors::permissive())
             .wrap(error::get_error_handlers())
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .configure(config)
     })
-    .bind("0.0.0.0:8080")?
-    .bind_rustls("0.0.0.0:8083", ssl_config)?
-    .run()
-    .await
+        .bind("0.0.0.0:8080")?
+        .bind_rustls("0.0.0.0:8083", ssl_config)?
+        .run()
+        .await
 }

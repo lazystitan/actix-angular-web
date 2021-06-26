@@ -1,0 +1,14 @@
+<form id="form" [formGroup]="postForm" (ngSubmit)="onSubmit(postForm.value)">
+  <div class="title-container">
+    <label for="title">标题</label>
+    <input type="text" name="title" id="title" formControlName="title">
+  </div>
+  <div class="content-container">
+    <label for="content">内容</label>
+    <textarea name="content" id="content" formControlName="content"></textarea>
+  </div>
+  <div class="button-container">
+    <button type="submit" id="button">提交</button>
+  </div>
+</form>
+

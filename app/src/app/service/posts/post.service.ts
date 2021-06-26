@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import {MessageService} from "../message.service";
-import {Observable, of} from "rxjs";
-import {Post} from "../../model/post";
+import {Observable} from "rxjs";
+import {Post, PostInsert} from "../../model/post";
 import {HttpClient} from "@angular/common/http";
-import {POSTS} from "../../mock/mock-posts";
 
 @Injectable({
   providedIn: 'root'
@@ -30,5 +29,10 @@ export class PostService {
   getPost(id:Number): Observable<Post> {
     this.messageService.add(`PostService: fetched post id=${id}`);
     return this.http.get<Post>(this.postUrl + `/${id}`)
+  }
+
+  addPost(post: PostInsert): Observable<PostInsert> {
+    this.messageService.add(`PostService: add post`);
+    return this.http.post<PostInsert>(this.postUrl, post)
   }
 }

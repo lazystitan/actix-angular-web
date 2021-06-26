@@ -47,7 +47,7 @@ impl DataService {
 
     pub fn add_post(&self, post: PostInsert) -> Result<(), Error> {
         let connection = &self.conn();
-        insert_into(posts)
+        match insert_into(posts)
             .values(
                 (
                     title.eq(post.title),
@@ -55,8 +55,14 @@ impl DataService {
                     content.eq(post.content),
                     published.eq(true)
                 )
-            ).execute(connection);
-        Ok(())
+            ).execute(connection) {
+            Ok(_) => {
+                Ok(())
+            }
+            Err(e) => {
+                Err(e)
+            }
+        }
     }
 
 }
@@ -70,6 +76,9 @@ mod db_test {
     fn insert_test() {
         dotenv::dotenv().ok();
         let pool = DataService::new("dev");
-        pool.add_post();
+        pool.add_post(PostInsert {
+            title: "".to_string(),
+            content: "".to_string()
+        });
     }
 }

@@ -51,7 +51,17 @@ async fn post(
 }
 
 #[post("/post")]
-async fn add_post(data_service: web::Data<db::DataService>, form: web::Form<PostInsert>) -> Result<HttpResponse> {
+async fn add_post(data_service: web::Data<db::DataService>, form: web::Json<PostInsert>) -> Result<HttpResponse> {
+    let post_insert = form.0;
+    let res = data_service.add_post(post_insert);
+    match res {
+        Ok(_) => Ok(HttpResponse::Ok().body("{\"code\":0}")),
+        Err(_) => Ok(HttpResponse::Ok().body("{\"code\":1}"))
+    }
+}
+
+#[post("/post_form")]
+async fn add_post_form(data_service: web::Data<db::DataService>, form: web::Form<PostInsert>) -> Result<HttpResponse> {
     let post_insert = form.0;
     let res = data_service.add_post(post_insert);
     match res {
@@ -118,11 +128,11 @@ async fn add_counter(session : Session) -> Result<HttpResponse> {
     )))
 }
 
+const TOKEN: &str = "b36519073a8f8f2dfc11100975f46123";
+
 #[post("/login")]
-async fn login(form: web::Form<LoginFormData>) -> Result<HttpResponse> {
-    Ok(HttpResponse::Ok().body(format!(
-        "{}-{}", form.username, form.password
-    )))
+async fn login(_form: web::Form<LoginFormData>) -> Result<HttpResponse> {
+    Ok(HttpResponse::Ok().body(TOKEN.clone()))
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {

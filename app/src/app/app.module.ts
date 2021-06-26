@@ -13,6 +13,7 @@ import {PostComponent} from './component/post/post.component';
 import { HeaderComponent } from './component/header/header.component';
 import { FooterComponent } from './component/footer/footer.component';
 import { LoginComponent } from './component/login/login.component';
+import { PostEditComponent } from './component/post-edit/post-edit.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import { LoginComponent } from './component/login/login.component';
     PostComponent,
     HeaderComponent,
     FooterComponent,
-    LoginComponent
+    LoginComponent,
+    PostEditComponent
   ],
   imports: [
     BrowserModule,

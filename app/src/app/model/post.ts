@@ -6,3 +6,8 @@ export interface Post {
   create_time: string,
   last_update_time: string
 }
+
+export interface PostInsert {
+  title: string,
+  content: string
+}
