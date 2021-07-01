@@ -51,13 +51,18 @@ async fn post(
 }
 
 #[post("/post")]
-async fn add_post(data_service: web::Data<db::DataService>, form: web::Json<PostInsert>) -> Result<HttpResponse> {
-    let post_insert = form.0;
-    let res = data_service.add_post(post_insert);
-    match res {
-        Ok(_) => Ok(HttpResponse::Ok().body("{\"code\":0}")),
-        Err(_) => Ok(HttpResponse::Ok().body("{\"code\":1}"))
+async fn add_post(req: HttpRequest,data_service: web::Data<db::DataService>, form: web::Json<PostInsert>) -> Result<HttpResponse> {
+    if let Some(token) = req.headers().get("Authorization") {
+        if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
+            let post_insert = form.0;
+            let res = data_service.add_post(post_insert);
+            if let Ok(_) = res {
+                return Ok(HttpResponse::Ok().body("{\"code\":0}"))
+            }
+        }
+
     }
+    Ok(HttpResponse::Ok().body("{\"code\":1}"))
 }
 
 #[post("/post_form")]
@@ -114,7 +119,7 @@ async fn panic_sim(web::Path(flag): web::Path<bool>) -> Result<HttpResponse, Api
 }
 
 #[get("/session/add")]
-async fn add_counter(session : Session) -> Result<HttpResponse> {
+async fn add_counter(session: Session) -> Result<HttpResponse> {
     if let Some(count) = session.get::<i32>("counter")? {
         session.set("counter", count + 1)?;
     } else {
@@ -128,11 +133,35 @@ async fn add_counter(session : Session) -> Result<HttpResponse> {
     )))
 }
 
-const TOKEN: &str = "b36519073a8f8f2dfc11100975f46123";
-
 #[post("/login")]
-async fn login(_form: web::Form<LoginFormData>) -> Result<HttpResponse> {
-    Ok(HttpResponse::Ok().body(TOKEN.clone()))
+async fn login(data_service: web::Data<db::DataService>, login_info: web::Json<LoginFormData>) -> Result<HttpResponse> {
+    let username = &login_info.username;
+
+    use sha3::{Sha3_512, Digest};
+    let password = login_info.password.as_bytes();
+    let mut hasher = Sha3_512::new();
+    hasher.update(password);
+    hasher.update("riton_elion");
+    let hashed_password = format!("{:x}", hasher.finalize());
+
+    if username == "admin" && hashed_password == "b10279a4e0e52eaa152a19d168f0bb0327c644ff02be31cc12621882108b93d7316bab7abc18befc8af622028d66dddfc58dc6182bcfc0fba807b6b0602efca5" {
+        match data_service.gen_token() {
+            Ok(token) => {
+                Ok(HttpResponse::Ok().body(format!(
+                    "{{\"code\":0,\"token\":\"{}\"}}", token
+                )))
+            }
+            Err(e) => {
+                Ok(HttpResponse::Ok().body(format!(
+                    "{{\"code\":1,\"message\":\"{:?}\"}}", e
+                )))
+            }
+        }
+    } else {
+        Ok(HttpResponse::Ok().body(
+            "{\"code\":1,\"message\": \"wrong username or passoword\"}"
+        ))
+    }
 }
 
 pub fn config(cfg: &mut web::ServiceConfig) {
@@ -143,9 +172,9 @@ pub fn config(cfg: &mut web::ServiceConfig) {
         .service(add_counter)
         .service(add_post)
     )
-    .service(static_file)
-    .service(index)
-    .service(echo)
-    .route("/hello", web::get().to(manual_hello))
-    .service(panic_sim);
+        .service(static_file)
+        .service(index)
+        .service(echo)
+        .route("/hello", web::get().to(manual_hello))
+        .service(panic_sim);
 }

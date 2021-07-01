@@ -1,3 +1,12 @@
+POST http://localhost:8080/apis/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": ""
+}
+
+###
 POST http://127.0.0.1:8080/apis/login
 Content-Type: application/x-www-form-urlencoded
 
@@ -21,6 +30,8 @@ title=test2&content=123
 --WebAppBoundary--
 
 ###
+
+
 
 
 

@@ -3,6 +3,7 @@ import {Post} from "../../model/post";
 import {ActivatedRoute} from "@angular/router";
 import {PostService} from "../../service/posts/post.service";
 import {Location} from '@angular/common';
+import marked from "marked";
 
 @Component({
   selector: 'app-post',
@@ -41,7 +42,10 @@ export class PostComponent implements OnInit {
       return;
     }
     this.postService.getPost(id)
-      .subscribe(post => this.post = post);
+      .subscribe(post => {
+        this.post = post
+        this.post.content = marked(this.post.content)
+      });
   }
 
   goBack(): void {

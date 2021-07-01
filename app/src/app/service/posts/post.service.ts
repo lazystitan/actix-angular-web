@@ -31,7 +31,7 @@ export class PostService {
     return this.http.get<Post>(this.postUrl + `/${id}`)
   }
 
-  addPost(post: PostInsert): Observable<PostInsert> {
+  addPost(post: PostInsert): Observable<any> {
     this.messageService.add(`PostService: add post`);
     return this.http.post<PostInsert>(this.postUrl, post)
   }

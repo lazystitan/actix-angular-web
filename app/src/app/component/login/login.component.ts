@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AuthService} from "../../service/auth/auth.service";
+import {TokenStorageService} from "../../service/auth/token-storage.service";
+import {Router} from "@angular/router";
 
 
 @Component({
@@ -10,11 +13,11 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorTips: { [key: string]: string } = {
-    name: '',
+    username: '',
     password: ''
   };
   validationMessage: { [key: string]: { [key: string]: string } } = {
-    name: {
+    username: {
       'required': '请输入用户名',
       'minlength': '用户名过短'
     },
@@ -25,21 +28,33 @@ export class LoginComponent implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private tokenStorageService: TokenStorageService,
+    private router: Router
   ) {
     this.loginForm = this.formBuilder.group({
-      'name': ['', [Validators.required, Validators.minLength(3)]],
+      'username': ['', [Validators.required, Validators.minLength(3)]],
       'password': ['', [Validators.required, Validators.minLength(6)]]
     })
-    this.loginForm.valueChanges.subscribe(data => this.onValueChanged(data))
+    this.loginForm.valueChanges.subscribe(data => this.onValueChanged(data));
   }
 
   ngOnInit(): void {
   }
 
-  onSubmit(userData: FormGroup) {
+  onSubmit(_userData: FormGroup) {
     if (this.validLoginForm()) {
-      this.loginForm.reset();
+      this.authService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value)
+        .subscribe(data => {
+          if (data.code == 0) {
+            this.tokenStorageService.saveToken(data.token);
+            this.router.navigate(['/post_edit']);
+          } else {
+            alert(data.message);
+            this.loginForm.reset();
+          }
+        })
     }
   }
 
@@ -47,7 +62,7 @@ export class LoginComponent implements OnInit {
     let haveError = false;
     for (const field in this.errorTips) {
       this.errorTips[field] = '';
-      const ctl = this.loginForm.get(field)
+      const ctl = this.loginForm.get(field);
       if (ctl) {
         let check: any = false;
         if (afterChange) {
@@ -64,12 +79,12 @@ export class LoginComponent implements OnInit {
         }
       }
     }
-    return !haveError
+    return !haveError;
   }
 
 
-  onValueChanged(_data: { name: string, password: string }) {
-    this.validLoginForm(true)
+  onValueChanged(_data: FormGroup) {
+    this.validLoginForm(true);
   }
 
 }

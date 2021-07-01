@@ -1,4 +1,4 @@
-use chrono::NaiveDateTime;
+use chrono::{NaiveDateTime};
 use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Deserialize, Serialize)]
@@ -25,4 +25,12 @@ pub struct PostInsert {
     // pub author: String,
     pub content: String,
     // pub published: bool,
+}
+
+#[derive(Queryable, Deserialize, Serialize)]
+pub struct TokenHistory {
+    pub id: i32,
+    pub token: String,
+    pub create_time: NaiveDateTime,
+    pub expire_time: NaiveDateTime
 }
