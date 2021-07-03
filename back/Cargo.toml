@@ -3,6 +3,7 @@ name = "actix-angular-web"
 version = "0.14.0"
 authors = ["riton"]
 edition = "2018"
+default-run = "actix-angular-web"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
