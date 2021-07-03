@@ -3,12 +3,12 @@ extern crate diesel;
 #[macro_use]
 extern crate log;
 
-pub mod api;
 pub mod db;
 pub mod error;
 pub mod logger;
 pub mod models;
 pub mod schema;
+pub mod apis;
 
 
 
@@ -16,7 +16,7 @@ use actix_cors::Cors;
 use actix_web::{App, HttpServer};
 use actix_web::middleware::Logger;
 use actix_session::{CookieSession};
-use api::config;
+use apis::config;
 use std::{io, fs, env};
 use rustls::internal::pemfile;
 
