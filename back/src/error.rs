@@ -14,6 +14,8 @@ struct ApiError {
 pub enum CustomError {
     InternalError(String),
     BadClientData(String),
+    StaticNotFound,
+    StaticInternalError
 }
 
 impl fmt::Display for CustomError {
@@ -32,6 +34,12 @@ impl fmt::Display for CustomError {
                     message: m.clone()
                 }
             }
+            CustomError::StaticNotFound => {
+                return write!(f, "Not Found")
+            }
+            CustomError::StaticInternalError => {
+                return write!(f, "Internal Error")
+            }
         }
         write!(f, "{}", serde_json::to_string(&r).unwrap())
     }
@@ -41,19 +49,9 @@ impl error::ResponseError for CustomError {
     fn status_code(&self) -> http::StatusCode {
         match self {
             CustomError::InternalError(_) => { http::StatusCode::INTERNAL_SERVER_ERROR }
+            CustomError::StaticInternalError => {http::StatusCode::INTERNAL_SERVER_ERROR}
             CustomError::BadClientData(_) => { http::StatusCode::BAD_REQUEST }
+            CustomError::StaticNotFound => { http::StatusCode::NOT_FOUND }
         }
     }
 }
-
-// fn render_500<B>(mut res: dev::ServiceResponse<B>) -> actix_web::Result<errhandlers::ErrorHandlerResponse<B>> {
-//     res.response_mut().headers_mut().insert(
-//         http::header::CONTENT_TYPE,
-//         http::HeaderValue::from_static("Error"),
-//     );
-//     Ok(errhandlers::ErrorHandlerResponse::Response(res))
-// }
-//
-// pub fn get_error_handlers<B:'static>() -> errhandlers::ErrorHandlers<B>{
-//     errhandlers::ErrorHandlers::new().handler(http::StatusCode::INTERNAL_SERVER_ERROR, render_500)
-// }

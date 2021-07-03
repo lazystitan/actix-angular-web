@@ -4,16 +4,18 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppComponent} from './app.component';
-import {MessagesComponent} from './component/messages/messages.component';
 import {AppRoutingModule} from './routes/app-routing.module';
 import {APIInterceptor} from './api.interceptor';
-import {PostCardComponent} from './component/post-card/post-card.component';
-import {PostListComponent} from './component/post-list/post-list.component';
-import {PostComponent} from './component/post/post.component';
-import { HeaderComponent } from './component/header/header.component';
-import { FooterComponent } from './component/footer/footer.component';
-import { LoginComponent } from './component/login/login.component';
-import { PostEditComponent } from './component/post-edit/post-edit.component';
+import {MessagesComponent} from './components/messages/messages.component';
+import {PostCardComponent} from './components/post-card/post-card.component';
+import {PostListComponent} from './components/post-list/post-list.component';
+import {PostComponent} from './components/post/post.component';
+import { HeaderComponent } from './components/header/header.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { LoginComponent } from './components/login/login.component';
+import { PostEditComponent } from './components/post-edit/post-edit.component';
+import {MaterialModule} from "./material/material.module";
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { PostEditComponent } from './component/post-edit/post-edit.component';
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    MaterialModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

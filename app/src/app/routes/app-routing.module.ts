@@ -1,9 +1,9 @@
 import {Injectable, NgModule} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
-import {PostComponent} from "../component/post/post.component";
-import {PostListComponent} from "../component/post-list/post-list.component";
-import {LoginComponent} from "../component/login/login.component";
-import {PostEditComponent} from "../component/post-edit/post-edit.component";
+import {PostComponent} from "../components/post/post.component";
+import {PostListComponent} from "../components/post-list/post-list.component";
+import {LoginComponent} from "../components/login/login.component";
+import {PostEditComponent} from "../components/post-edit/post-edit.component";
 import {Observable} from "rxjs";
 
 class UserToken {}
