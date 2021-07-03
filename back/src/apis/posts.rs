@@ -1,10 +1,10 @@
 use actix_web::{get, post, web, HttpResponse, HttpRequest, Result as AResult};
 use crate::db;
-use crate::error::ApiError;
+use crate::error::CustomError;
 use crate::models::PostInsert;
 
 #[get("/posts")]
-pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResponse, ApiError> {
+pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResponse, CustomError> {
     info!("get posts");
     let posts_result = web::block(move || data_service.get_posts()).await.map_err(|e| {
         eprintln!("{:?}", e);
@@ -20,7 +20,7 @@ pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResp
 pub async fn post(
     data_service: web::Data<db::DataService>,
     web::Path(post_id): web::Path<i32>,
-) -> AResult<HttpResponse, ApiError> {
+) -> AResult<HttpResponse, CustomError> {
     let post = web::block(move || data_service.get_post(post_id))
         .await
         .map_err(|e| {
