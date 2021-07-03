@@ -14,7 +14,7 @@ use actix_cors::Cors;
 use actix_session::CookieSession;
 use actix_web::middleware::{Condition, Logger};
 use actix_web::{App, HttpServer};
-use apis::config;
+use apis::gen_config;
 use rustls::internal::pemfile;
 use std::{env, fs, io};
 
@@ -59,7 +59,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(CookieSession::signed(&[0; 32]).secure(false))
             .wrap(Condition::new(stage == "dev", Cors::permissive()))
-            .configure(config)
+            .configure(gen_config(stage))
     })
     .bind("0.0.0.0:8080")?
     .bind_rustls("0.0.0.0:8083", ssl_config)?

@@ -1,4 +1,4 @@
-GET http://localhost:8080/error_test/0
+GET http://localhost:8080/scrathces/error_test/0
 Accept: application/json
 
 ###
