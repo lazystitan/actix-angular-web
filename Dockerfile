@@ -13,6 +13,6 @@ WORKDIR /var/www/http/blog
 RUN apt-get update && apt-get update && apt-get install -y libpq5 && mkdir log
 COPY ./back/.env /var/www/http/blog
 COPY ./back/config /var/www/http/blog/config
-COPY --from=backen /var/www/http/blog/bin/ ./back/bin/
-COPY --from=front /var/www/http/app/dist/app/ ./app/dist/app/
+COPY --from=backen /var/www/http/blog/back/bin/ ./back/bin/
+COPY --from=front /var/www/http/blog/app/dist/app/ ./app/dist/app/
 

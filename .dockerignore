@@ -13,3 +13,4 @@ Cargo.lock
 
 /sql
 /log
+back/src/bin
