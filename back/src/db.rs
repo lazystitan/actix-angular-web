@@ -1,5 +1,5 @@
 use crate::models::{Post, PostInsert, TokenHistory};
-use diesel::{prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, PgConnection, insert_into};
+use diesel::{prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, PgConnection, insert_into, update};
 use std::env;
 use rand::Rng;
 use std::hash::{Hash, Hasher};
@@ -54,7 +54,25 @@ impl DataService {
         return result;
     }
 
-    pub fn add_post(&self, post: PostInsert) -> Result<(), Error> {
+    pub fn get_latest_add_post(&self) -> Result<Post, Error> {
+        use crate::schema::posts::dsl::*;
+        let connection = &self.conn();
+        let result = posts.filter(published.eq(true))
+            .order(id.desc())
+            .first::<Post>(connection);
+        return result;
+    }
+
+    pub fn delete_post(&self, post_id: i32) -> Result<usize, Error> {
+        use crate::schema::posts::dsl::*;
+        let connection = &self.conn();
+        let result = update(posts).filter(id.eq(post_id))
+            .set(published.eq(false))
+            .execute(connection);
+        return result;
+    }
+
+    pub fn add_post(&self, post: PostInsert) -> Result<usize, Error> {
         use crate::schema::posts::dsl::*;
         let connection = &self.conn();
         match insert_into(posts)
@@ -66,12 +84,8 @@ impl DataService {
                     published.eq(true)
                 )
             ).execute(connection) {
-            Ok(_) => {
-                Ok(())
-            }
-            Err(e) => {
-                Err(e)
-            }
+            Ok(rows_inserted) => { Ok(rows_inserted) }
+            Err(e) => { Err(e) }
         }
     }
 
@@ -135,29 +149,35 @@ mod db_test {
     use super::*;
 
     #[test]
-    fn insert_test() {
+    fn posts_test() {
         dotenv::dotenv().ok();
         let pool = DataService::new("dev");
-        pool.add_post(PostInsert {
-            title: "".to_string(),
-            content: "".to_string()
-        });
+        if let Ok(effect_rows) = pool.add_post(PostInsert {
+            title: "test".to_string(),
+            content: "test".to_string()
+        }) {
+            assert_eq!(effect_rows, 1);
+            if let Ok(latest_post) = pool.get_latest_add_post() {
+                assert_eq!(latest_post.title, "test");
+                assert_eq!(latest_post.title, "test");
+                if let Ok(effect_rows) = pool.delete_post(latest_post.id) {
+                    assert_eq!(effect_rows, 1);
+                    return
+                }
+            }
+        }
+        assert!(false);
     }
 
     #[test]
-    fn gen_token_test() {
+    fn token_test() {
         dotenv::dotenv().ok();
         let pool = DataService::new("dev");
-        pool.gen_token();
-    }
-
-    #[test]
-    fn validate_test() {
-        dotenv::dotenv().ok();
-        let pool = DataService::new("dev");
-        let token1 = "123123";
-        assert_ne!(pool.validate_token(token1), Ok(()));
-        let token2 = "18427246111595943982";
-        assert_eq!(pool.validate_token(token2), Ok(()));
+        if let Ok(gened_token) = pool.gen_token() {
+            assert_eq!(pool.validate_token(&gened_token), Ok(()));
+            assert_ne!(pool.validate_token("123123"), Ok(()));
+            return;
+        }
+        assert!(false);
     }
 }

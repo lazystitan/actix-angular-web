@@ -14,6 +14,7 @@ pub fn config_prod(cfg: &mut web::ServiceConfig) {
             .service(posts::post)
             .service(auth::login)
             .service(posts::add_post)
+            .service(posts::delete_post)
     )
     .service(statics::static_file)
     .service(statics::index);
