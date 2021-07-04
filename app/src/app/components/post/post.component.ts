@@ -8,7 +8,7 @@ import marked from "marked";
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
-  styleUrls: ['./post.component.less']
+  styleUrls: ['./post.component.scss']
 })
 export class PostComponent implements OnInit {
 

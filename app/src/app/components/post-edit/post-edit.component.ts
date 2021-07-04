@@ -6,7 +6,7 @@ import {PostInsert} from "../../model/post";
 @Component({
   selector: 'app-post-edit',
   templateUrl: './post-edit.component.html',
-  styleUrls: ['./post-edit.component.less']
+  styleUrls: ['./post-edit.component.scss']
 })
 export class PostEditComponent implements OnInit {
 
