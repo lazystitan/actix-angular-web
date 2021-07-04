@@ -7,10 +7,11 @@ A blog for myself build with actix-web and angular.
 ### Production
 
 ```shell
-cd ./app
-ng build
-cd ..
-cargo run --release
+docker image build -t aaweb .
+docker container run -it -d --name aaweb -p 80:8080 -p 443:8083 xxx bash
+docker exec -it xxx bash
+cd /var/www/http/actix-angular-web
+./back/bin/actix-angular-web --prod
 ```
 
 ### Develop
@@ -26,7 +27,9 @@ cargo run
 ## Milestones
 
 - [x] Basic front and back show blogs
-- [ ] Deploy script
+- [ ] Blog edit (Working on)
+- [ ] Beautify (Working on)
+- [x] Deploy script
 - [x] Simple log system
 - [ ] Cache system
 - [x] Database connection pool
