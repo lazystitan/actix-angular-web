@@ -44,9 +44,9 @@ pub async fn add_post(
     if let Some(token) = req.headers().get("Authorization") {
         if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
             let post_insert = form.0;
-            let res = data_service.add_post(post_insert);
-            if let Ok(_) = res {
-                return Ok(HttpResponse::Ok().body("{\"code\":0}"));
+            return match data_service.add_post(post_insert) {
+                Ok(_) => Ok(HttpResponse::Ok().body("{\"code\":0}")),
+                Err(e) => Err(CustomError::InternalError(e.to_string()))
             }
         }
     }
