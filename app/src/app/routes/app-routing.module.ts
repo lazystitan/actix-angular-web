@@ -1,30 +1,33 @@
 import {Injectable, NgModule} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, RouterModule, RouterStateSnapshot, Routes, UrlTree} from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterModule,
+  RouterStateSnapshot,
+  Routes,
+  UrlTree
+} from '@angular/router';
 import {PostComponent} from "../components/post/post.component";
 import {PostListComponent} from "../components/post-list/post-list.component";
 import {LoginComponent} from "../components/login/login.component";
 import {PostEditComponent} from "../components/post-edit/post-edit.component";
 import {Observable} from "rxjs";
-
-class UserToken {}
-
-class Permissions {
-  canActivate(user: UserToken, id: string): boolean {
-    console.log(UserToken)
-    console.log(id)
-    return true;
-  }
-}
+import {TokenStorageService} from "../service/auth/token-storage.service";
 
 @Injectable()
 class CanActivateTeam implements CanActivate {
-  constructor(private permissions: Permissions, private currentUser: UserToken) {}
+  constructor(private router: Router, private tokenService: TokenStorageService) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean|UrlTree>|Promise<boolean|UrlTree>|boolean|UrlTree {
-    return this.permissions.canActivate(this.currentUser, route.params.id);
+    if (!this.tokenService.isLogin()) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
   }
 }
 
@@ -39,7 +42,7 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [CanActivateTeam, UserToken, Permissions]
+  providers: [CanActivateTeam]
 
 })
 export class AppRoutingModule {

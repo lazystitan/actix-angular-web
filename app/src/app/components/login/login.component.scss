@@ -1,16 +1,12 @@
-form {
-  width: 300px;
-  margin: auto;
-  div {
-    display: flex;
-    margin: 10px;
-    justify-content: space-between;
-    input {
-      width: 200px;
+.login {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  &__card {
+    min-width: 350px;
+    margin: 20px;
+    &__input-row {
+      width: 100%;
     }
-  }
-  button {
-    width: 120px;
-    margin: auto;
   }
 }

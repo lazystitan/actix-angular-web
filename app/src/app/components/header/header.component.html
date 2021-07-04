@@ -1,5 +1,7 @@
 <mat-toolbar class="app-header" [class.mat-elevation-z1]="true" color="primary">
   <a mat-button routerLink="/">{{title}}</a>
   <span class="app-header__spacer"></span>
-  <a mat-button routerLink="/login">登录</a>
+  <a mat-button *ngIf="!tokenService.isLogin()" routerLink="/login">登录</a>
+  <a mat-button *ngIf="tokenService.isLogin()" routerLink="/post_edit">发布</a>
+  <a mat-button *ngIf="tokenService.isLogin()" (click)="tokenService.signOut()">登出</a>
 </mat-toolbar>

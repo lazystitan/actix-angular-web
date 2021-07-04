@@ -1,19 +1,30 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
-  <div class="name-line">
-    <span>用户名</span>
-    <label for="name">
-      <input id="name" type="text" formControlName="username">
-    </label>
-  </div>
-  <div *ngIf="errorTips.name != ''">{{errorTips.username}}</div>
-  <div class="password-line">
-    <span>密钥</span>
-    <label for="password">
-      <input id="password" type="password" formControlName="password">
-    </label>
-  </div>
-  <div *ngIf="errorTips.password != ''">{{errorTips.password}}</div>
-  <div class="button-line">
-  <button class="button" type="submit">登入</button>
-  </div>
-</form>
+<div class="login">
+  <mat-card class="login__card">
+    <mat-card-header>
+      <span mat-card-avatar class="material-icons">account_circle</span>
+      <mat-card-title>登录</mat-card-title>
+    </mat-card-header>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit(loginForm.value)">
+      <mat-card-content>
+        <div>
+          <mat-form-field class="login__card__input-row login__card__username">
+            <mat-label>用户名</mat-label>
+            <input matInput id="name" type="text" formControlName="username">
+          </mat-form-field>
+<!--          <div *ngIf="errorTips.name != ''">{{errorTips.username}}</div>-->
+          <mat-form-field class="login__card__input-row login__card__password">
+            <mat-label>密钥</mat-label>
+            <input matInput id="password" type="password" formControlName="password">
+          </mat-form-field>
+<!--          <div *ngIf="errorTips.password != ''">{{errorTips.password}}</div>-->
+        </div>
+      </mat-card-content>
+      <mat-card-actions class="button-line" align="end">
+        <button mat-raised-button class="button" type="submit">
+          登入
+          <span class="material-icons">login</span>
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</div>
