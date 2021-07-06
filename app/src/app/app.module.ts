@@ -10,11 +10,12 @@ import {MessagesComponent} from './components/messages/messages.component';
 import {PostCardComponent} from './components/post-card/post-card.component';
 import {PostListComponent} from './components/post-list/post-list.component';
 import {PostComponent} from './components/post/post.component';
-import { HeaderComponent } from './components/header/header.component';
-import { FooterComponent } from './components/footer/footer.component';
-import { LoginComponent } from './components/login/login.component';
-import { PostEditComponent } from './components/post-edit/post-edit.component';
+import {HeaderComponent} from './components/header/header.component';
+import {FooterComponent} from './components/footer/footer.component';
+import {LoginComponent} from './components/login/login.component';
+import {PostEditComponent} from './components/post-edit/post-edit.component';
 import {MaterialModule} from "./material/material.module";
+import {DeletePostDialogComponent} from './components/delete-post-dialog/delete-post-dialog.component';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import {MaterialModule} from "./material/material.module";
     HeaderComponent,
     FooterComponent,
     LoginComponent,
-    PostEditComponent
+    PostEditComponent,
+    DeletePostDialogComponent
   ],
   imports: [
     BrowserModule,

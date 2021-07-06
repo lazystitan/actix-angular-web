@@ -1,0 +1,2 @@
+-- Your SQL goes here
+alter table posts add column digest varchar not null default '', add column viewers_number integer not null default 0, add column like_number integer not null default 0,  add column dislike_number integer not null default 0;

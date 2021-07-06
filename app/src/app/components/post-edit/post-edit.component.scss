@@ -1,8 +1,8 @@
 .post-edit {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
+  margin-top: 20px;
+  &__title {
+    text-align: center;
+  }
   &__form {
     max-width: 1200px;
     width: 100%;

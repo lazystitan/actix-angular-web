@@ -81,7 +81,8 @@ impl DataService {
                     title.eq(post.title),
                     author.eq("riton"),
                     content.eq(post.content),
-                    published.eq(true)
+                    published.eq(true),
+                    digest.eq(post.digest)
                 )
             ).execute(connection) {
             Ok(rows_inserted) => { Ok(rows_inserted) }
@@ -153,13 +154,15 @@ mod db_test {
         dotenv::dotenv().ok();
         let pool = DataService::new("dev");
         if let Ok(effect_rows) = pool.add_post(PostInsert {
-            title: "test".to_string(),
-            content: "test".to_string()
+            title: "test_title".to_string(),
+            content: "test_content".to_string(),
+            digest: "test_digest".to_string()
         }) {
             assert_eq!(effect_rows, 1);
             if let Ok(latest_post) = pool.get_latest_add_post() {
-                assert_eq!(latest_post.title, "test");
-                assert_eq!(latest_post.title, "test");
+                assert_eq!(latest_post.title, "test_title");
+                assert_eq!(latest_post.content, "test_content");
+                assert_eq!(latest_post.digest, "test_digest");
                 if let Ok(effect_rows) = pool.delete_post(latest_post.id) {
                     assert_eq!(effect_rows, 1);
                     return

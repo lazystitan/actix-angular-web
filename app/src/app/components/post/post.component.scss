@@ -1,4 +1,21 @@
 .post-detail {
   max-width: 1200px;
-  margin: 20px auto auto;
+  margin: 20px auto;
+  padding: 16px 32px;
+  &__header__title {
+    font-size: 26px;
+    line-height: 26px;
+  }
+  &__info {
+    display: flex;
+    justify-content: space-between;
+    color: #c4c0c0;
+    span:first-child {
+      margin-right: 10px;
+    }
+  }
+  &__content {
+    border-top: #cfd8dc solid 1px;
+    padding-top: 20px;
+  }
 }

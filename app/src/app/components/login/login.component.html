@@ -10,17 +10,18 @@
           <mat-form-field class="login__card__input-row login__card__username">
             <mat-label>用户名</mat-label>
             <input matInput id="name" type="text" formControlName="username">
+            <mat-hint *ngIf="errorTips.name != ''">{{errorTips.username}}</mat-hint>
           </mat-form-field>
-<!--          <div *ngIf="errorTips.name != ''">{{errorTips.username}}</div>-->
           <mat-form-field class="login__card__input-row login__card__password">
             <mat-label>密钥</mat-label>
-            <input matInput id="password" type="password" formControlName="password">
+            <input matInput id="password" [type]="hide ? 'password' : 'text'" formControlName="password">
+            <mat-icon matSuffix (click)="hide = !hide"> {{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            <mat-hint *ngIf="errorTips.password != ''">{{errorTips.password}}</mat-hint>
           </mat-form-field>
-<!--          <div *ngIf="errorTips.password != ''">{{errorTips.password}}</div>-->
         </div>
       </mat-card-content>
       <mat-card-actions class="button-line" align="end">
-        <button mat-raised-button class="button" type="submit">
+        <button mat-button class="button" type="submit">
           登入
           <span class="material-icons">login</span>
         </button>

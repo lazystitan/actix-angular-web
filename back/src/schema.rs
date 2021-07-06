@@ -7,6 +7,10 @@ table! {
         published -> Bool,
         create_time -> Timestamp,
         last_update_time -> Timestamp,
+        digest -> Varchar,
+        viewers_number -> Int4,
+        like_number -> Int4,
+        dislike_number -> Int4,
     }
 }
 

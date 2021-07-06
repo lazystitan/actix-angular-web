@@ -1,19 +1,26 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import {Post} from "../../model/post";
 import {ActivatedRoute} from "@angular/router";
 import {PostService} from "../../service/posts/post.service";
 import {Location} from '@angular/common';
 import marked from "marked";
+import hljs from "highlight.js"
 
 @Component({
   selector: 'app-post',
   templateUrl: './post.component.html',
   styleUrls: ['./post.component.scss']
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, AfterViewChecked {
 
   @Input() post: Post = {
     author: "",
+    digest: '',
     content: "",
     create_time: "",
     id: 0,
@@ -44,12 +51,16 @@ export class PostComponent implements OnInit {
     this.postService.getPost(id)
       .subscribe(post => {
         this.post = post
-        this.post.content = marked(this.post.content)
+        this.post.content =  marked(this.post.content)
       });
   }
 
   goBack(): void {
-    this.location.back()
+    this.location.back();
+  }
+
+  ngAfterViewChecked() {
+    hljs.highlightAll()
   }
 
 }

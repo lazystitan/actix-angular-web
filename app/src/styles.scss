@@ -28,8 +28,10 @@ body, input[type="text"], button {
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.post-card__header .mat-card-header-text {
-  margin-left: 0;
+.post-card,.post-detail {
+  .mat-card-header-text {
+    margin-left: 0;
+  }
 }
 
 app-root {
@@ -37,4 +39,6 @@ app-root {
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+  overflow-y: auto;
+  background-color: #f6f6f6;
 }

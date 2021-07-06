@@ -1,13 +1,25 @@
-import { NgModule } from '@angular/core';
+import {NgModule} from '@angular/core';
 import {MatCardModule} from "@angular/material/card";
 import {MatButtonModule} from "@angular/material/button";
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {MatIconModule} from "@angular/material/icon";
+import {MatDialogModule} from "@angular/material/dialog";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
-
-const materialComponents = [BrowserAnimationsModule, MatCardModule, MatButtonModule,MatToolbarModule,MatFormFieldModule, MatInputModule]
+const materialComponents = [
+  BrowserAnimationsModule,
+  MatCardModule,
+  MatButtonModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatInputModule,
+  MatIconModule,
+  MatDialogModule,
+  MatSnackBarModule
+]
 
 @NgModule({
   imports: [
@@ -17,4 +29,5 @@ const materialComponents = [BrowserAnimationsModule, MatCardModule, MatButtonMod
     materialComponents
   ]
 })
-export class MaterialModule { }
+export class MaterialModule {
+}

@@ -10,6 +10,10 @@ pub struct Post {
     pub published: bool,
     pub create_time: NaiveDateTime,
     pub last_update_time: NaiveDateTime,
+    pub digest: String,
+    pub viewers_number: i32,
+    pub like_number: i32,
+    pub dislike_number: i32
 }
 
 #[derive(Deserialize)]
@@ -25,6 +29,7 @@ pub struct PostInsert {
     // pub author: String,
     pub content: String,
     // pub published: bool,
+    pub digest: String
 }
 
 #[derive(Queryable, Deserialize, Serialize)]

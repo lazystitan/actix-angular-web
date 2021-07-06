@@ -33,5 +33,21 @@ nav a.active {
 }
 
 .app-main {
+  display: flex;
+  flex-direction: column;
   padding-top: 64px;
+  width: 100%;
+  flex-grow: 1;
+  &__router-outlet {
+    margin: auto;
+    width: 65%;
+    max-width: 1200px;
+    flex-grow: 1;
+  }
+}
+
+@media (max-width: 36rem) {
+  .app-main__router-outlet {
+    width: 98%;
+  }
 }

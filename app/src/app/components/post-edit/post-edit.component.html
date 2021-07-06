@@ -1,9 +1,13 @@
 <div class="post-edit">
-  <h2>发布</h2>
+  <h2 class="post-edit__title">发布</h2>
   <form id="form" class="post-edit__form" [formGroup]="postForm" (ngSubmit)="onSubmit(postForm.value)">
     <mat-form-field class="post-edit__form__title post-edit__form__input-row">
       <mat-label>标题</mat-label>
       <input matInput type="text" name="title" id="title" formControlName="title">
+    </mat-form-field>
+    <mat-form-field class="post-edit__form__digest post-edit__form__input-row">
+      <mat-label>简述</mat-label>
+      <textarea matInput rows="5" type="text" name="title" id="digest" formControlName="digest"></textarea>
     </mat-form-field>
     <mat-form-field class="post-edit__form__content post-edit__form__input-row" appearance="outline">
       <mat-label>内容</mat-label>

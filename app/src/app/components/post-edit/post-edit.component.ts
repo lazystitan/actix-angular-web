@@ -18,6 +18,7 @@ export class PostEditComponent implements OnInit {
   ) {
     this.postForm = this.formBuilder.group({
       'title': "",
+      'digest':"",
       'content': "",
     })
   }
