@@ -23,7 +23,7 @@ class CanActivateTeam implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean|UrlTree>|Promise<boolean|UrlTree>|boolean|UrlTree {
-    if (!this.tokenService.isLogin()) {
+    if (!this.tokenService.isLogin.value) {
       this.router.navigate(['/login']);
       return false;
     }

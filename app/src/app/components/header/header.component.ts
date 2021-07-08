@@ -9,11 +9,20 @@ import {TokenStorageService} from "../../service/auth/token-storage.service";
 export class HeaderComponent implements OnInit {
   title = 'Riton\'s blog';
 
+  isLogin = false;
+
   constructor(
-    public tokenService: TokenStorageService
+    private tokenService: TokenStorageService
   ) { }
 
   ngOnInit(): void {
+    this.tokenService.isLogin.subscribe((value) => {
+      this.isLogin = value;
+    })
+  }
+
+  signOut(): void {
+    this.tokenService.signOut();
   }
 
 }

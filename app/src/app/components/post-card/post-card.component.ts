@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 import {Post} from '../../model/post'
 import {TokenStorageService} from "../../service/auth/token-storage.service";
@@ -25,8 +25,12 @@ export class PostCardComponent implements OnInit {
     last_update_time: ''
   };
 
+  isLogin = false;
+
+  @Output() deletePostEvent = new EventEmitter<any>();
+
   constructor(
-    public tokenService: TokenStorageService,
+    private tokenService: TokenStorageService,
     private postService: PostService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
@@ -43,6 +47,9 @@ export class PostCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.tokenService.isLogin.subscribe((value) => {
+      this.isLogin = value;
+    })
   }
 
   deletePost(id : number) {
@@ -52,7 +59,7 @@ export class PostCardComponent implements OnInit {
         this.postService.deletePost(id).subscribe(data => {
           if (data.code == 0) {
             this.snackBar.open('删除成功');
-            window.location.reload();
+            this.deletePostEvent.emit(id);
           } else {
             this.snackBar.open('删除失败');
           }

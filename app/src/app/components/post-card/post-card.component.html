@@ -11,7 +11,7 @@
   </mat-card-content>
 <!--  <span class="update-time">{{post.last_update_time}}</span>-->
   <mat-card-actions align="end" class="post-card__actions">
-    <button *ngIf="tokenService.isLogin()" (click)="deletePost(post.id)" mat-button color="warn">删除</button>
+    <button *ngIf="isLogin" (click)="deletePost(post.id)" mat-button color="warn">删除</button>
     <a mat-button class="post-card__actions__more" routerLink="/post/{{post.id}}">
       <span>更多</span>
       <span class="material-icons">chevron_right</span>

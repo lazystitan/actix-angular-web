@@ -25,4 +25,8 @@ export class PostListComponent implements OnInit {
     this.postService.getPosts().subscribe(posts => this.posts = posts)
   }
 
+  deletePostHandler(id: number): void {
+    this.posts = this.posts.filter((post) => post.id != id);
+  }
+
 }
