@@ -51,7 +51,7 @@ export class PostComponent implements OnInit, AfterViewChecked {
     this.postService.getPost(id)
       .subscribe(post => {
         this.post = post
-        this.post.content =  marked(this.post.content)
+        this.post.content = marked(this.post.content)
       });
   }
 

@@ -5,11 +5,11 @@ use actix_web::{get, post, delete, web, HttpRequest, HttpResponse, Result as ARe
 
 #[get("/posts")]
 pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResponse, CustomError> {
-    info!("get posts");
+    info!("get all posts");
     let posts_result = web::block(move || data_service.get_posts())
         .await
         .map_err(|e| {
-            eprintln!("{:?}", e);
+            error!("{:?}", e);
             CustomError::InternalError("Internal error".to_string())
         });
     match posts_result {
@@ -23,10 +23,11 @@ pub async fn post(
     data_service: web::Data<db::DataService>,
     web::Path(post_id): web::Path<i32>,
 ) -> AResult<HttpResponse, CustomError> {
+    info!("get post {}", post_id);
     let post = web::block(move || data_service.get_post(post_id))
         .await
         .map_err(|e| {
-            eprintln!("{:?}", e);
+            error!("{:?}", e);
             CustomError::InternalError("Internal error".to_string())
         });
     match post {
@@ -41,11 +42,12 @@ pub async fn delete_post(
     data_service: web::Data<db::DataService>,
     web::Path(post_id): web::Path<i32>,
 ) -> Result<HttpResponse, CustomError> {
+    info!("delete post {}", post_id);
     if let Some(token) = req.headers().get("Authorization") {
         if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
             return match web::block(move || data_service.delete_post(post_id)).await.map_err(
                 |e| {
-                    eprintln!("{:?}", e);
+                    error!("{:?}", e);
                     CustomError::InternalError("Internal error".to_string())
                 }
             ) {
@@ -67,10 +69,17 @@ pub async fn add_post(
         if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
             let post_insert = form.0;
             return match data_service.add_post(post_insert) {
-                Ok(_) => Ok(HttpResponse::Ok().body("{\"code\":0}")),
-                Err(e) => Err(CustomError::InternalError(e.to_string()))
+                Ok(_) => {
+                    info!("a post added");
+                    Ok(HttpResponse::Ok().body("{\"code\":0}"))
+                },
+                Err(e) => {
+                    error!("{:?}", e);
+                    Err(CustomError::InternalError(e.to_string()))
+                }
             }
         }
     }
+    error!("Validation failed for {:?}", req.headers().get("Authorization"));
     Err(CustomError::BadClientData("Validation failed".to_string()))
 }

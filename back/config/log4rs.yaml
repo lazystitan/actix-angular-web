@@ -1,22 +1,19 @@
 refresh_rate: 30 seconds
 appenders:
   stdout:
-    kind: console
-  requests:
     kind: file
-    path: "log/requests.log"
-    filters:
-      - kind: request_filter
-        request_field: api
+    path: "log/any.log"
+  apis_error:
+    kind: file
+    path: "log/apis_error.log"
     encoder:
       pattern: "{d} {l} {t} - {m}{n}"
 root:
-  level: info
+  level: trace
   appenders:
     - stdout
 loggers:
-  requests_logger:
-    level: info
+  actix_angular_web::apis:
+    level: error
     appenders:
-      - requests
-    additive: false
+      - apis_error
