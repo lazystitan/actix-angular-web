@@ -41,21 +41,33 @@ pub async fn delete_post(
     req: HttpRequest,
     data_service: web::Data<db::DataService>,
     web::Path(post_id): web::Path<i32>,
-) -> Result<HttpResponse, CustomError> {
-    info!("delete post {}", post_id);
-    if let Some(token) = req.headers().get("Authorization") {
-        if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
-            return match web::block(move || data_service.delete_post(post_id)).await.map_err(
+) -> AResult<HttpResponse, CustomError> {
+    info!("try delete post {}", post_id);
+    if let Some(token_req) = req.headers().get("Authorization") {
+        let token = token_req.to_str().unwrap().to_string();
+        let data_service_arc = (*data_service).clone();
+        if let Ok(_) = web::block(move || data_service_arc.validate_token(&token)).await.map_err(
+            |e| {
+                error!("{:?}", e);
+                CustomError::InternalError("Internal error".to_string())
+            }
+        ) {
+            let data_service_arc = (*data_service).clone();
+            return match web::block(move || data_service_arc.delete_post(post_id)).await.map_err(
                 |e| {
                     error!("{:?}", e);
                     CustomError::InternalError("Internal error".to_string())
                 }
             ) {
-                Ok(_) => Ok(HttpResponse::Ok().body("{\"code\":0}")),
+                Ok(_) => {
+                    info!("delete post {}", post_id);
+                    Ok(HttpResponse::Ok().body("{\"code\":0}"))
+                },
                 Err(e) => Err(e)
-            }
+            };
         }
     }
+    error!("Validation failed for {:?}", req.headers().get("Authorization"));
     Err(CustomError::BadClientData("Validation failed".to_string()))
 }
 
@@ -65,19 +77,36 @@ pub async fn add_post(
     data_service: web::Data<db::DataService>,
     form: web::Json<PostInsert>,
 ) -> AResult<HttpResponse, CustomError> {
-    if let Some(token) = req.headers().get("Authorization") {
-        if let Ok(_) = data_service.validate_token(token.to_str().unwrap()) {
-            let post_insert = form.0;
-            return match data_service.add_post(post_insert) {
-                Ok(_) => {
-                    info!("a post added");
-                    Ok(HttpResponse::Ok().body("{\"code\":0}"))
-                },
-                Err(e) => {
-                    error!("{:?}", e);
-                    Err(CustomError::InternalError(e.to_string()))
+    info!("add post");
+    if let Some(token_req) = req.headers().get("Authorization") {
+        let token = token_req.to_str().unwrap().to_string();
+        let data_service_arc = (*data_service).clone();
+        return match web::block(move || data_service_arc.validate_token(&token)).await.map_err(
+            |e| {
+                error!("{:?}", e);
+                CustomError::InternalError("Internal error".to_string())
+            }
+        ) {
+            Ok(_) => {
+                let post_insert = form.0;
+                let data_service_arc = (*data_service).clone();
+                match web::block(move || data_service_arc.add_post(post_insert)).await.map_err(
+                    |e| {
+                        error!("{:?}", e);
+                        CustomError::InternalError("Internal error".to_string())
+                    }
+                ) {
+                    Ok(_) => {
+                        info!("post added");
+                        Ok(HttpResponse::Ok().body("{\"code\":0}"))
+                    }
+                    Err(e) => {
+                        error!("{:?}", e);
+                        Err(e)
+                    }
                 }
             }
+            Err(e) => Err(e)
         }
     }
     error!("Validation failed for {:?}", req.headers().get("Authorization"));
