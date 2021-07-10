@@ -12,7 +12,7 @@ pub mod ssl;
 pub mod util;
 
 use actix_cors::Cors;
-use actix_web::middleware::{Condition, Logger};
+use actix_web::middleware::{Condition, Logger, Compress};
 use actix_web::{App, HttpServer};
 use std::{env};
 
@@ -55,6 +55,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .data(db_pool.clone())
+            .wrap(Compress::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(Condition::new(stage == "dev", Cors::permissive()))
             .configure(apis::gen_config(stage))
