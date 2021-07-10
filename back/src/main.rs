@@ -16,14 +16,19 @@ use actix_web::middleware::{Condition, Logger};
 use actix_web::{App, HttpServer};
 use std::{env};
 
-#[actix_web::main]
-async fn main() -> std::io::Result<()> {
-    //get stage
+pub fn running_stage() -> &'static str {
     let args: Vec<_> = env::args().collect();
     let mut stage = "dev";
     if args.len() >= 2 && args[1] == "--prod" {
         stage = "prod";
     }
+    stage
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    //get stage
+    let stage = running_stage();
 
     //init logger
     log4rs::init_file("config/log4rs.yaml", Default::default()).unwrap_or_else(|e| {
