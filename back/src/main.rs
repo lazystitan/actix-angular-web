@@ -9,6 +9,7 @@ pub mod error;
 pub mod models;
 pub mod schema;
 pub mod ssl;
+pub mod util;
 
 use actix_cors::Cors;
 use actix_web::middleware::{Condition, Logger};

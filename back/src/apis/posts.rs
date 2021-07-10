@@ -2,6 +2,7 @@ use crate::db;
 use crate::error::CustomError;
 use crate::models::PostInsert;
 use actix_web::{get, post, delete, web, HttpRequest, HttpResponse, Result as AResult};
+use crate::util::do_after_validation;
 
 #[get("/posts")]
 pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResponse, CustomError> {
@@ -43,72 +44,34 @@ pub async fn delete_post(
     web::Path(post_id): web::Path<i32>,
 ) -> AResult<HttpResponse, CustomError> {
     info!("try delete post {}", post_id);
-    if let Some(token_req) = req.headers().get("Authorization") {
-        let token = token_req.to_str().unwrap().to_string();
-        let data_service_arc = (*data_service).clone();
-        if let Ok(_) = web::block(move || data_service_arc.validate_token(&token)).await.map_err(
-            |e| {
-                error!("{:?}", e);
-                CustomError::InternalError("Internal error".to_string())
-            }
-        ) {
-            let data_service_arc = (*data_service).clone();
-            return match web::block(move || data_service_arc.delete_post(post_id)).await.map_err(
-                |e| {
-                    error!("{:?}", e);
-                    CustomError::InternalError("Internal error".to_string())
-                }
-            ) {
-                Ok(_) => {
-                    info!("delete post {}", post_id);
-                    Ok(HttpResponse::Ok().body("{\"code\":0}"))
-                },
-                Err(e) => Err(e)
-            };
-        }
-    }
-    error!("Validation failed for {:?}", req.headers().get("Authorization"));
-    Err(CustomError::BadClientData("Validation failed".to_string()))
+    let data_service_arc = (*data_service).clone();
+    return match do_after_validation(req, data_service_arc.clone(), move || data_service_arc.delete_post(post_id)).await {
+        Ok(_) => {
+            info!("delete post {}", post_id);
+            Ok(HttpResponse::Ok().body("{\"code\":0}"))
+        },
+        Err(e) => Err(e)
+    };
+
 }
 
 #[post("/post")]
 pub async fn add_post(
     req: HttpRequest,
     data_service: web::Data<db::DataService>,
-    form: web::Json<PostInsert>,
+    data: web::Json<PostInsert>,
 ) -> AResult<HttpResponse, CustomError> {
     info!("add post");
-    if let Some(token_req) = req.headers().get("Authorization") {
-        let token = token_req.to_str().unwrap().to_string();
-        let data_service_arc = (*data_service).clone();
-        return match web::block(move || data_service_arc.validate_token(&token)).await.map_err(
-            |e| {
-                error!("{:?}", e);
-                CustomError::InternalError("Internal error".to_string())
-            }
-        ) {
-            Ok(_) => {
-                let post_insert = form.0;
-                let data_service_arc = (*data_service).clone();
-                match web::block(move || data_service_arc.add_post(post_insert)).await.map_err(
-                    |e| {
-                        error!("{:?}", e);
-                        CustomError::InternalError("Internal error".to_string())
-                    }
-                ) {
-                    Ok(_) => {
-                        info!("post added");
-                        Ok(HttpResponse::Ok().body("{\"code\":0}"))
-                    }
-                    Err(e) => {
-                        error!("{:?}", e);
-                        Err(e)
-                    }
-                }
-            }
-            Err(e) => Err(e)
+    let data_service_arc = (*data_service).clone();
+    let post_insert = data.0;
+    return match do_after_validation(req, data_service_arc.clone(), move || data_service_arc.add_post(post_insert)).await {
+        Ok(_) => {
+            info!("post added");
+            Ok(HttpResponse::Ok().body("{\"code\":0}"))
+        }
+        Err(e) => {
+            error!("{:?}", e);
+            Err(e)
         }
     }
-    error!("Validation failed for {:?}", req.headers().get("Authorization"));
-    Err(CustomError::BadClientData("Validation failed".to_string()))
 }
