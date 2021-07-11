@@ -8,10 +8,6 @@ import {
   Routes,
   UrlTree
 } from '@angular/router';
-import {PostComponent} from "../components/post/post.component";
-import {PostListComponent} from "../components/post-list/post-list.component";
-import {LoginComponent} from "../components/login/login.component";
-import {PostEditComponent} from "../components/post-edit/post-edit.component";
 import {Observable} from "rxjs";
 import {TokenStorageService} from "../service/auth/token-storage.service";
 
@@ -33,10 +29,23 @@ class CanActivateTeam implements CanActivate {
 
 const routes: Routes = [
   {path: '', redirectTo: '/posts', pathMatch: 'full'},
-  {path: 'posts', component: PostListComponent},
-  {path: 'post/:id', component: PostComponent},
-  {path: 'login', component: LoginComponent},
-  {path: 'post_edit', component: PostEditComponent, canActivate: [CanActivateTeam]}
+  {
+    path: 'posts',
+    loadChildren: () => import('../views/post-list/post-list.module').then(m => m.PostListModule)
+  },
+  {
+    path: 'post/:id',
+    loadChildren: () => import('../views/post/post.module').then(m => m.PostModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('../views/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'post_edit',
+    loadChildren: () => import('../views/post-edit/post-edit.module').then(m => m.PostEditModule),
+    canActivate: [CanActivateTeam]
+  }
 ];
 
 @NgModule({
@@ -45,5 +54,4 @@ const routes: Routes = [
   providers: [CanActivateTeam]
 
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule { }
