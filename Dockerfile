@@ -16,4 +16,5 @@ COPY ./back/config/ /var/www/http/blog/back/config/
 COPY ./back/ssl/ /var/www/http/blog/back/ssl/
 COPY --from=backen /var/www/http/blog/back/bin/ ./back/bin/
 COPY --from=front /var/www/http/blog/app/dist/app/ ./app/dist/app/
-
+WORKDIR /var/www/http/blog/back
+ENTRYPOINT ["./bin/actix-angular-web", "--prod"]
