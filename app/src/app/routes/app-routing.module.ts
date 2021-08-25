@@ -8,8 +8,8 @@ import {
   Routes,
   UrlTree
 } from '@angular/router';
-import {Observable} from "rxjs";
-import {TokenStorageService} from "../service/auth/token-storage.service";
+import {Observable} from 'rxjs';
+import {TokenStorageService} from '../service/auth/token-storage.service';
 
 @Injectable()
 class CanActivateTeam implements CanActivate {
@@ -42,7 +42,7 @@ const routes: Routes = [
     loadChildren: () => import('../views/login/login.module').then(m => m.LoginModule)
   },
   {
-    path: 'post_edit',
+    path: 'post_edit/:id',
     loadChildren: () => import('../views/post-edit/post-edit.module').then(m => m.PostEditModule),
     canActivate: [CanActivateTeam]
   }

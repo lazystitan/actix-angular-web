@@ -1,24 +1,26 @@
-use crate::models::{Post, PostInsert, TokenHistory};
-use diesel::{prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, PgConnection, insert_into, update};
 use std::env;
-use rand::Rng;
 use std::hash::{Hash, Hasher};
+
+use diesel::{insert_into, PgConnection, prelude::*, r2d2::ConnectionManager, r2d2::PooledConnection, result::Error, update};
+use rand::Rng;
+
+use crate::models::{Post, PostInsert, TokenHistory};
 
 type DbPool = r2d2::Pool<ConnectionManager<PgConnection>>;
 
 #[derive(Hash)]
 struct TokenProp {
     time: u128,
-    number: i32
+    number: i32,
 }
 
 #[derive(Clone)]
 pub struct DataService {
-    pool : DbPool
+    pool: DbPool,
 }
 
 impl DataService {
-    pub fn new(stage : &str) -> Self {
+    pub fn new(stage: &str) -> Self {
         let mut db_url = "DATABASE_URL";
         if stage == "prod" {
             db_url = "DATABASE_URL_PROD";
@@ -72,6 +74,15 @@ impl DataService {
         return result;
     }
 
+    pub fn update_post(&self, post_id: i32, post: PostInsert) -> Result<usize, Error> {
+        use crate::schema::posts::dsl::*;
+        let connection = &self.conn();
+        let result = update(posts).filter(id.eq(post_id))
+            .set((title.eq(post.title), digest.eq(post.digest), content.eq(post.content)))
+            .execute(connection);
+        return result;
+    }
+
     pub fn add_post(&self, post: PostInsert) -> Result<usize, Error> {
         use crate::schema::posts::dsl::*;
         let connection = &self.conn();
@@ -103,7 +114,7 @@ impl DataService {
         let number = rng.gen::<i32>();
         let token_prop = TokenProp {
             time,
-            number
+            number,
         };
         let mut hasher = hash_map::DefaultHasher::new();
         token_prop.hash(&mut hasher);
@@ -115,7 +126,7 @@ impl DataService {
             (
                 token.eq(&gened_token),
                 expire_time.eq((Local::now() + Duration::days(30)).naive_local())
-                )
+            )
         ).execute(connection) {
             Ok(_) => {
                 Ok(gened_token)
@@ -124,7 +135,6 @@ impl DataService {
                 Err(e)
             }
         }
-
     }
 
     pub fn validate_token(&self, token_to_validate: &str) -> Result<(), Error> {
@@ -139,14 +149,11 @@ impl DataService {
             Ok(_) => Ok(()),
             Err(e) => Err(e)
         }
-
     }
-
 }
 
 #[cfg(test)]
 mod db_test {
-
     use super::*;
 
     #[test]
@@ -156,7 +163,7 @@ mod db_test {
         if let Ok(effect_rows) = pool.add_post(PostInsert {
             title: "test_title".to_string(),
             content: "test_content".to_string(),
-            digest: "test_digest".to_string()
+            digest: "test_digest".to_string(),
         }) {
             assert_eq!(effect_rows, 1);
             if let Ok(latest_post) = pool.get_latest_add_post() {
@@ -165,7 +172,7 @@ mod db_test {
                 assert_eq!(latest_post.digest, "test_digest");
                 if let Ok(effect_rows) = pool.delete_post(latest_post.id) {
                     assert_eq!(effect_rows, 1);
-                    return
+                    return;
                 }
             }
         }

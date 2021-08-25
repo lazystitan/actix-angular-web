@@ -1,11 +1,11 @@
-import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Post} from '../../model/post'
-import {TokenStorageService} from "../../service/auth/token-storage.service";
-import {PostService} from "../../service/posts/post.service";
-import {MatDialog} from "@angular/material/dialog";
-import {DeletePostDialogComponent} from "../delete-post-dialog/delete-post-dialog.component";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {Post} from '../../model/post';
+import {TokenStorageService} from '../../service/auth/token-storage.service';
+import {PostService} from '../../service/posts/post.service';
+import {MatDialog} from '@angular/material/dialog';
+import {DeletePostDialogComponent} from '../delete-post-dialog/delete-post-dialog.component';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-post-card',
@@ -14,7 +14,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 })
 export class PostCardComponent implements OnInit {
 
-  @Input() index: number = 0;
+  @Input() index = 0;
   @Input() post: Post = {
     id: -1,
     title: '',
@@ -34,11 +34,10 @@ export class PostCardComponent implements OnInit {
     private postService: PostService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
-
   ) {
   }
 
-  openDialog() {
+  openDialog(): void {
     const dialogRef = this.dialog.open(DeletePostDialogComponent);
 
     dialogRef.afterClosed().subscribe(result => {
@@ -49,24 +48,23 @@ export class PostCardComponent implements OnInit {
   ngOnInit(): void {
     this.tokenService.isLogin.subscribe((value) => {
       this.isLogin = value;
-    })
+    });
   }
 
-  deletePost(id : number) {
+  deletePost(id: number): void {
     const dialogRef = this.dialog.open(DeletePostDialogComponent);
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.postService.deletePost(id).subscribe(data => {
-          if (data.code == 0) {
+          if (data.code === 0) {
             this.snackBar.open('删除成功');
             this.deletePostEvent.emit(id);
           } else {
             this.snackBar.open('删除失败');
           }
-        })
+        });
       }
     });
-
   }
 
 }

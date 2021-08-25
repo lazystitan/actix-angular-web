@@ -7,7 +7,6 @@ mod scrathces;
 mod statics;
 
 pub fn config_prod(cfg: &mut web::ServiceConfig) {
-
     cfg.service(
         web::scope("/apis")
             .service(posts::posts)
@@ -15,14 +14,15 @@ pub fn config_prod(cfg: &mut web::ServiceConfig) {
             .service(auth::login)
             .service(posts::add_post)
             .service(posts::delete_post)
+            .service(posts::update_post)
     )
-    .service(statics::static_file)
-    .service(statics::index);
+        .service(statics::static_file)
+        .service(statics::index);
 }
 
 pub fn config_dev(cfg: &mut web::ServiceConfig) {
     cfg.service(
-        web::scope("/scrathces")
+        web::scope("/scratches")
             .service(scrathces::add_counter)
             .service(scrathces::panic_sim)
             .service(scrathces::error_test)
