@@ -1,6 +1,7 @@
 # Actix-Angular-Web
 
 A blog for myself build with actix-web and angular.
+Used by my personal site : https://www.ritonelion.com
 
 ## Usage
 
@@ -27,6 +28,7 @@ cargo run
 ## Milestones
 
 - [x] Basic front and back show blogs
+- [x] Create new blog
 - [ ] Blog edit (Working on)
 - [ ] Beautify (Working on)
 - [x] Deploy script
