@@ -52,12 +52,12 @@ export class PostEditComponent implements OnInit {
   onSubmit(post: PostInsert): void {
     const resProcess = (res: any) => {
       if (res.code === 0) {
-        this.snackBar.open('成功');
+        this.snackBar.open('成功', undefined, {duration: 3000});
         setTimeout(() => {
           this.router.navigate([`/post/${res.id}`]);
         }, 1000);
       } else {
-        this.snackBar.open('失败');
+        this.snackBar.open('失败', undefined, {duration: 3000});
       }
     };
     if (this.editPostId !== 0) {

@@ -57,10 +57,10 @@ export class PostCardComponent implements OnInit {
       if (result) {
         this.postService.deletePost(id).subscribe(data => {
           if (data.code === 0) {
-            this.snackBar.open('删除成功');
+            this.snackBar.open('删除成功', undefined, {duration: 3000});
             this.deletePostEvent.emit(id);
           } else {
-            this.snackBar.open('删除失败');
+            this.snackBar.open('删除失败', undefined, {duration: 3000});
           }
         });
       }
