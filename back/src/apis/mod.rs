@@ -34,12 +34,8 @@ pub fn config_dev(cfg: &mut web::ServiceConfig) {
 
 pub fn gen_config(stage: &str) -> fn(&mut ServiceConfig) {
     match stage == "prod" {
-        true => {
-            config_prod
-        }
-        false => {
-            config_dev
-        }
+        true => { config_prod }
+        false => { config_dev }
     }
 }
 

@@ -67,7 +67,16 @@ pub async fn add_post(
     return match do_after_validation(req, data_service_arc.clone(), move || data_service_arc.add_post(post_insert)).await {
         Ok(_) => {
             info!("post added");
-            Ok(HttpResponse::Ok().body("{\"code\":0}"))
+            let o_post = web::block(move || data_service.get_latest_add_post())
+                .await
+                .map_err(|e| {
+                    error!("{:?}", e);
+                    CustomError::InternalError("Internal error".to_string())
+                });
+            match o_post {
+                Ok(p) => Ok(HttpResponse::Ok().body(format!("{{\"code\":0,\"id\":{}}}", p.id))),
+                Err(error) => Err(error),
+            }
         }
         Err(e) => {
             error!("{:?}", e);
