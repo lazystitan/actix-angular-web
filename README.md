@@ -1,7 +1,6 @@
 # Actix-Angular-Web
 
-A blog for myself build with actix-web and angular.
-Used by my personal site : https://www.ritonelion.com
+A blog for myself build with actix-web and angular. Used by my personal site : https://www.ritonelion.com
 
 ## Usage
 
@@ -22,6 +21,7 @@ cd /var/www/http/actix-angular-web
 cd ./app
 ng serve
 #actix
+cd ./back
 cargo run
 ```
 
@@ -29,7 +29,10 @@ cargo run
 
 - [x] Basic front and back show blogs
 - [x] Create new blog
-- [ ] Blog edit (Working on)
+- [x] Blog edit (Working on)
+- [ ] Post catalogue and navigation
+    - [x] click catalogue scroll to correspond content
+    - [ ] active style for reference in catalogue of current content
 - [ ] Beautify (Working on)
 - [x] Deploy script
 - [x] Simple log system
@@ -37,5 +40,7 @@ cargo run
 - [x] Database connection pool
 - [x] Containerization
 - [ ] Comment and github OAuth
+- [ ] tag system
+- [ ] image in post support
 
-### 
+###     
