@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {PostListRoutingModule} from "./post-list-routing.module";
+import {PostListRoutingModule} from './post-list-routing.module';
 import {PostCardComponent} from '../../components/post-card/post-card.component';
 import {PostListComponent} from '../../components/post-list/post-list.component';
-import {MaterialModule} from "../../material/material.module";
+import {MaterialModule} from '../../material/material.module';
 
 
 

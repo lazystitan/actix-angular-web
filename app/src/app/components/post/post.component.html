@@ -1,18 +1,28 @@
-<mat-card class="post-detail">
-  <mat-card-header class="post-detail__header">
-    <mat-card-title class="post-detail__header__title">{{post.title}}</mat-card-title>
-    <mat-card-subtitle>{{post.author}}</mat-card-subtitle>
-  </mat-card-header>
-  <div class="post-detail__info">
-    <p class="post-detail__info__create">
-      <span>创建时间</span>
-      <span>{{post.create_time | date:"yyyy-MM-dd HH:mm"}}</span>
-    </p>
-    <p class="post-detail__info__update">
-      <span>更新时间</span>
-      <span>{{post.last_update_time | date:"yyyy-MM-dd HH:mm"}}</span>
-    </p>
+<div class="post">
+  <div *ngIf="catalogue !== ''" class="post__catalogue">
+    <mat-card class="post__catalogue__main">
+      <mat-card-header class="post__catalogue__main__header">
+        <mat-card-title class="post__catalogue__main__header__title">目录</mat-card-title>
+      </mat-card-header>
+      <div [innerHTML]="catalogue"></div>
+    </mat-card>
   </div>
-  <mat-card-content class="post-detail__content"  [innerHTML]="post.content">
-  </mat-card-content>
-</mat-card>
+  <mat-card class="post__detail">
+    <mat-card-header class="post__detail__header">
+      <mat-card-title class="post__detail__header__title">{{post.title}}</mat-card-title>
+      <mat-card-subtitle>{{post.author}}</mat-card-subtitle>
+    </mat-card-header>
+    <div class="post__detail__info">
+      <p class="post__detail__info__create">
+        <span>创建时间</span>
+        <span>{{post.create_time | date:"yyyy-MM-dd HH:mm"}}</span>
+      </p>
+      <p class="post__detail__info__update">
+        <span>更新时间</span>
+        <span>{{post.last_update_time | date:"yyyy-MM-dd HH:mm"}}</span>
+      </p>
+    </div>
+    <mat-card-content [innerHTML]="post.content" class="post__detail__content">
+    </mat-card-content>
+  </mat-card>
+</div>

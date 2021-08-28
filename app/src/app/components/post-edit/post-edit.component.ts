@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {PostService} from '../../service/posts/post.service';
 import {PostInsert} from '../../model/post';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {NoticeService} from '../../service/notice/notice.service';
 
 @Component({
   selector: 'app-post-edit',
@@ -19,7 +19,7 @@ export class PostEditComponent implements OnInit {
     private formBuilder: FormBuilder,
     private postService: PostService,
     private router: Router,
-    private snackBar: MatSnackBar,
+    private noticeService: NoticeService,
     private route: ActivatedRoute,
   ) {
     this.postForm = this.formBuilder.group({
@@ -52,12 +52,12 @@ export class PostEditComponent implements OnInit {
   onSubmit(post: PostInsert): void {
     const resProcess = (res: any) => {
       if (res.code === 0) {
-        this.snackBar.open('成功', undefined, {duration: 3000});
+        this.noticeService.plainNotice('成功');
         setTimeout(() => {
           this.router.navigate([`/post/${res.id}`]);
         }, 1000);
       } else {
-        this.snackBar.open('失败', undefined, {duration: 3000});
+        this.noticeService.plainNotice('失败');
       }
     };
     if (this.editPostId !== 0) {

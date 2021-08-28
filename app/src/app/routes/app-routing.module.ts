@@ -13,12 +13,13 @@ import {TokenStorageService} from '../service/auth/token-storage.service';
 
 @Injectable()
 class CanActivateTeam implements CanActivate {
-  constructor(private router: Router, private tokenService: TokenStorageService) {}
+  constructor(private router: Router, private tokenService: TokenStorageService) {
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
-  ): Observable<boolean|UrlTree>|Promise<boolean|UrlTree>|boolean|UrlTree {
+  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     if (!this.tokenService.isLogin.value) {
       this.router.navigate(['/login']);
       return false;
@@ -45,6 +46,11 @@ const routes: Routes = [
     path: 'post_edit/:id',
     loadChildren: () => import('../views/post-edit/post-edit.module').then(m => m.PostEditModule),
     canActivate: [CanActivateTeam]
+  },
+  {
+    path: 'post_edit',
+    loadChildren: () => import('../views/post-edit/post-edit.module').then(m => m.PostEditModule),
+    canActivate: [CanActivateTeam]
   }
 ];
 
@@ -54,4 +60,5 @@ const routes: Routes = [
   providers: [CanActivateTeam]
 
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

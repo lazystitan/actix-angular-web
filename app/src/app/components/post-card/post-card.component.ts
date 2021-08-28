@@ -5,7 +5,7 @@ import {TokenStorageService} from '../../service/auth/token-storage.service';
 import {PostService} from '../../service/posts/post.service';
 import {MatDialog} from '@angular/material/dialog';
 import {DeletePostDialogComponent} from '../delete-post-dialog/delete-post-dialog.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {NoticeService} from '../../service/notice/notice.service';
 
 @Component({
   selector: 'app-post-card',
@@ -33,7 +33,7 @@ export class PostCardComponent implements OnInit {
     private tokenService: TokenStorageService,
     private postService: PostService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private noticeService: NoticeService,
   ) {
   }
 
@@ -57,10 +57,10 @@ export class PostCardComponent implements OnInit {
       if (result) {
         this.postService.deletePost(id).subscribe(data => {
           if (data.code === 0) {
-            this.snackBar.open('删除成功', undefined, {duration: 3000});
+            this.noticeService.plainNotice('成功');
             this.deletePostEvent.emit(id);
           } else {
-            this.snackBar.open('删除失败', undefined, {duration: 3000});
+            this.noticeService.plainNotice('失败');
           }
         });
       }
