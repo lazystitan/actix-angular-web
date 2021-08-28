@@ -8,6 +8,27 @@
       position: absolute;
       right: 10px;
       white-space: nowrap;
+
+      &__content {
+        ::ng-deep {
+          ol {
+            padding-left: 20px;
+
+
+            & .catalogue-content {
+              cursor: pointer;
+
+              &:hover {
+                background-color: #f6f6f6;
+              }
+            }
+          }
+
+          li {
+            list-style-type: none;
+          }
+        }
+      }
     }
   }
 

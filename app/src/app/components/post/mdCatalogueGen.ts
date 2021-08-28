@@ -81,8 +81,8 @@ export const transferToDom = (tree: Tree<ILine>): string => {
   let result = '';
   const shower = (root: Node<ILine>) => {
     const content = root.data.content.replace(/^#+\s+/, '');
-    result += `<div ${genHashDataAttr(content)}>`;
-    result += content;
+    result += `<div>`;
+    result += `<span class="catalogue-content" ${genHashDataAttr(content)}>${content}</span>`;
     if (root.children.length > 0) {
       result += '<ol>';
     }

@@ -88,7 +88,8 @@ export class PostComponent implements OnInit, AfterViewChecked {
             // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < attrs.length; i++) {
               if (reg.test(attrs[i].name)) {
-                const el = document.querySelector(`[${attrs[i].name}]:not(div)`);
+                console.log(attrs[i].name);
+                const el = document.querySelector(`[${attrs[i].name}]:not(span)`);
                 if (el) {
                   el.scrollIntoView({behavior: 'smooth'});
                 }
