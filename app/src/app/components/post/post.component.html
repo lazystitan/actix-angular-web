@@ -1,10 +1,10 @@
 <div class="post">
-  <div *ngIf="catalogue !== ''" class="post__catalogue">
+  <div #catalogueRef *ngIf="catalogue !== ''" class="post__catalogue">
     <mat-card class="post__catalogue__main">
       <mat-card-header class="post__catalogue__main__header">
         <mat-card-title class="post__catalogue__main__header__title">目录</mat-card-title>
       </mat-card-header>
-      <div [innerHTML]="catalogue"></div>
+      <div [innerHTML]="catalogue | safeHtml"></div>
     </mat-card>
   </div>
   <mat-card class="post__detail">
@@ -22,7 +22,7 @@
         <span>{{post.last_update_time | date:"yyyy-MM-dd HH:mm"}}</span>
       </p>
     </div>
-    <mat-card-content [innerHTML]="post.content" class="post__detail__content">
+    <mat-card-content [innerHTML]="post.content | safeHtml" class="post__detail__content">
     </mat-card-content>
   </mat-card>
 </div>

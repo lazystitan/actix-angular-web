@@ -1,3 +1,5 @@
+import {genHashDataAttr} from './mdRender';
+
 export class Node<K> {
   data: K;
   children: Node<K>[];
@@ -78,8 +80,8 @@ export const genCatalogue = (lines: string[]): Tree<ILine> => {
 export const transferToDom = (tree: Tree<ILine>): string => {
   let result = '';
   const shower = (root: Node<ILine>) => {
-    result += '<div>';
-    const content = root.data.content.replace(/^#+/, '');
+    const content = root.data.content.replace(/^#+\s+/, '');
+    result += `<div ${genHashDataAttr(content)}>`;
     result += content;
     if (root.children.length > 0) {
       result += '<ol>';
