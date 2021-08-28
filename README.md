@@ -29,18 +29,19 @@ cargo run
 
 - [x] Basic front and back show blogs
 - [x] Create new blog
-- [x] Blog edit (Working on)
+- [ ] Blog edit
+    - [x] pure text markdown support
+    - [ ] image support (Working on)
 - [ ] Post catalogue and navigation
     - [x] click catalogue scroll to correspond content
-    - [ ] active style for reference in catalogue of current content
+    - [ ] active style for reference in catalogue of current content (Working on)
 - [ ] Beautify (Working on)
 - [x] Deploy script
 - [x] Simple log system
-- [ ] Cache system
+- [ ] Cache system (Working on)
 - [x] Database connection pool
 - [x] Containerization
 - [ ] Comment and github OAuth
 - [ ] tag system
-- [ ] image in post support
 
-###     
+###       
