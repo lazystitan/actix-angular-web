@@ -5,39 +5,39 @@ use serde::Serialize;
 use serde_json;
 
 #[derive(Debug, Serialize)]
-struct ApiError {
+struct ApiErrorDisplay {
     code: i32,
     message: String
 }
 
 #[derive(Debug, Serialize)]
-pub enum CustomError {
+pub enum ApiError {
     InternalError(String),
     BadClientData(String),
     StaticNotFound,
     StaticInternalError
 }
 
-impl fmt::Display for CustomError {
+impl fmt::Display for ApiError {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         let r;
         match self {
-            CustomError::InternalError(m) => {
-                r = ApiError {
+            ApiError::InternalError(m) => {
+                r = ApiErrorDisplay {
                     code: 1,
                     message: m.clone()
                 }
             }
-            CustomError::BadClientData(m) => {
-                r = ApiError {
+            ApiError::BadClientData(m) => {
+                r = ApiErrorDisplay {
                     code: 2,
                     message: m.clone()
                 }
             }
-            CustomError::StaticNotFound => {
+            ApiError::StaticNotFound => {
                 return write!(f, "Not Found")
             }
-            CustomError::StaticInternalError => {
+            ApiError::StaticInternalError => {
                 return write!(f, "Internal Error")
             }
         }
@@ -45,13 +45,13 @@ impl fmt::Display for CustomError {
     }
 }
 
-impl error::ResponseError for CustomError {
+impl error::ResponseError for ApiError {
     fn status_code(&self) -> http::StatusCode {
         match self {
-            CustomError::InternalError(_) => { http::StatusCode::INTERNAL_SERVER_ERROR }
-            CustomError::StaticInternalError => {http::StatusCode::INTERNAL_SERVER_ERROR}
-            CustomError::BadClientData(_) => { http::StatusCode::BAD_REQUEST }
-            CustomError::StaticNotFound => { http::StatusCode::NOT_FOUND }
+            ApiError::InternalError(_) => { http::StatusCode::INTERNAL_SERVER_ERROR }
+            ApiError::StaticInternalError => {http::StatusCode::INTERNAL_SERVER_ERROR}
+            ApiError::BadClientData(_) => { http::StatusCode::BAD_REQUEST }
+            ApiError::StaticNotFound => { http::StatusCode::NOT_FOUND }
         }
     }
 }

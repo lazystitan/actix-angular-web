@@ -15,6 +15,7 @@ use actix_cors::Cors;
 use actix_web::middleware::{Condition, Logger, Compress};
 use actix_web::{App, HttpServer};
 use std::{env};
+use actix_web::web::Data;
 
 pub fn running_stage() -> &'static str {
     let args: Vec<_> = env::args().collect();
@@ -47,20 +48,20 @@ async fn main() -> std::io::Result<()> {
     //init ssl
     let pem_file_path = "ssl/5503875_www.ritonelion.com.pem";
     let private_path = "ssl/5503875_www.ritonelion.com.key";
-    let mut ssl_builder = ssl::SslConfigBuiler::new(pem_file_path, private_path);
+    let ssl_config = ssl::get_ssl_config(pem_file_path, private_path);
     info!("ssl init success!");
 
     //init server
     HttpServer::new(move || {
         App::new()
-            .data(db_pool.clone())
+            .app_data(Data::new(db_pool.clone()))
             .wrap(Compress::default())
             .wrap(Logger::new("%a %{User-Agent}i"))
             .wrap(Condition::new(stage == "dev", Cors::permissive()))
             .configure(apis::gen_config(stage))
     })
     .bind("0.0.0.0:8080")?
-    .bind_rustls("0.0.0.0:8083", ssl_builder.build())?
+    .bind_rustls("0.0.0.0:8083", ssl_config)?
     .run()
     .await
 }

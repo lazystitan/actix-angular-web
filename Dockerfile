@@ -1,4 +1,4 @@
-FROM rust:1.52.1 as backen
+FROM rust:1.61.0 as backen
 WORKDIR /var/www/http/blog/back
 COPY ./back /var/www/http/blog/back
 RUN cargo install --path . --root .

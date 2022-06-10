@@ -1,5 +1,5 @@
 use actix_web::{get, post, HttpResponse,  Responder, Result as AResult, web};
-use crate::error::CustomError;
+use crate::error::ApiError;
 use actix_session::Session;
 
 #[post("/echo")]
@@ -12,7 +12,7 @@ pub async fn manual_hello() -> impl Responder {
 }
 
 #[get("/panic/{flag}")]
-pub async fn panic_sim(info : web::Path<bool>) -> AResult<HttpResponse, CustomError> {
+pub async fn panic_sim(info : web::Path<bool>) -> AResult<HttpResponse, ApiError> {
     let flag = info.into_inner();
     if flag {
         Ok(HttpResponse::InternalServerError().finish())
@@ -36,14 +36,14 @@ pub async fn add_counter(session: Session) -> AResult<HttpResponse> {
 }
 
 #[get("/error_test/{id}")]
-pub async fn error_test(info: web::Path<i32>) -> AResult<HttpResponse, CustomError> {
+pub async fn error_test(info: web::Path<i32>) -> AResult<HttpResponse, ApiError> {
     let id = info.into_inner();
     match id {
         0 => {
-            Err(CustomError::BadClientData("sadfsadf".to_string()))
+            Err(ApiError::BadClientData("sadfsadf".to_string()))
         }
         _ => {
-            Err(CustomError::InternalError("sadfsadf".to_string()))
+            Err(ApiError::InternalError("sadfsadf".to_string()))
         }
     }
 }
