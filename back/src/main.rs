@@ -47,8 +47,7 @@ async fn main() -> std::io::Result<()> {
     //init ssl
     let pem_file_path = "ssl/5503875_www.ritonelion.com.pem";
     let private_path = "ssl/5503875_www.ritonelion.com.key";
-    let mut ssl_builder = ssl::SslConfigBuiler::new();
-    ssl_builder.set_ssl_files(pem_file_path, private_path);
+    let mut ssl_builder = ssl::SslConfigBuiler::new(pem_file_path, private_path);
     info!("ssl init success!");
 
     //init server

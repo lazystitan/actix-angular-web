@@ -15,7 +15,8 @@ pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResp
             CustomError::InternalError("Internal error".to_string())
         });
     match posts_result {
-        Ok(posts) => Ok(HttpResponse::Ok().json(posts)),
+        Ok(Ok(posts)) => Ok(HttpResponse::Ok().json(posts)),
+        Ok(Err(error)) => Err(CustomError::InternalError(error.to_string())),
         Err(error) => Err(error),
     }
 }
@@ -23,8 +24,9 @@ pub async fn posts(data_service: web::Data<db::DataService>) -> AResult<HttpResp
 #[get("/post/{post_id}")]
 pub async fn post(
     data_service: web::Data<db::DataService>,
-    web::Path(post_id): web::Path<i32>,
+    info: web::Path<i32>,
 ) -> AResult<HttpResponse, CustomError> {
+    let post_id = info.into_inner();
     info!("get post {}", post_id);
     let post = web::block(move || data_service.get_post(post_id))
         .await
@@ -33,7 +35,8 @@ pub async fn post(
             CustomError::InternalError("Internal error".to_string())
         });
     match post {
-        Ok(post) => Ok(HttpResponse::Ok().json(post)),
+        Ok(Ok(post)) => Ok(HttpResponse::Ok().json(post)),
+        Ok(Err(error)) => Err(CustomError::InternalError(error.to_string())),
         Err(error) => Err(error),
     }
 }
@@ -42,8 +45,9 @@ pub async fn post(
 pub async fn delete_post(
     req: HttpRequest,
     data_service: web::Data<db::DataService>,
-    web::Path(post_id): web::Path<i32>,
+    info: web::Path<i32>,
 ) -> AResult<HttpResponse, CustomError> {
+    let post_id = info.into_inner();
     info!("try delete post {}", post_id);
     let data_service_arc = (*data_service).clone();
     return match do_after_validation(req, data_service_arc.clone(), move || data_service_arc.delete_post(post_id)).await {
@@ -74,7 +78,8 @@ pub async fn add_post(
                     CustomError::InternalError("Internal error".to_string())
                 });
             match o_post {
-                Ok(p) => Ok(HttpResponse::Ok().body(format!("{{\"code\":0,\"id\":{}}}", p.id))),
+                Ok(Ok(p)) => Ok(HttpResponse::Ok().body(format!("{{\"code\":0,\"id\":{}}}", p.id))),
+                Ok(Err(error)) => Err(CustomError::InternalError(error.to_string())),
                 Err(error) => Err(error),
             }
         }
@@ -90,8 +95,9 @@ pub async fn update_post(
     req: HttpRequest,
     data_service: web::Data<db::DataService>,
     data: web::Json<PostInsert>,
-    web::Path(post_id): web::Path<i32>,
+    info : web::Path<i32>,
 ) -> AResult<HttpResponse, CustomError> {
+    let post_id = info.into_inner();
     info!("update post");
     let data_service_arc = (*data_service).clone();
     let post_insert = data.0;
@@ -105,7 +111,8 @@ pub async fn update_post(
                     CustomError::InternalError("Internal error".to_string())
                 });
             match o_post {
-                Ok(p) => Ok(HttpResponse::Ok().body(format!("{{\"code\":0,\"id\":{}}}", p.id))),
+                Ok(Ok(p)) => Ok(HttpResponse::Ok().body(format!("{{\"code\":0,\"id\":{}}}", p.id))),
+                Ok(Err(error)) => Err(CustomError::InternalError(error.to_string())),
                 Err(error) => Err(error),
             }
         }

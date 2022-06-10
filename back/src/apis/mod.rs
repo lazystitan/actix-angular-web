@@ -3,7 +3,7 @@ use actix_web::web::ServiceConfig;
 
 mod auth;
 mod posts;
-mod scrathces;
+mod scratches;
 mod statics;
 
 pub fn config_prod(cfg: &mut web::ServiceConfig) {
@@ -23,11 +23,11 @@ pub fn config_prod(cfg: &mut web::ServiceConfig) {
 pub fn config_dev(cfg: &mut web::ServiceConfig) {
     cfg.service(
         web::scope("/scratches")
-            .service(scrathces::add_counter)
-            .service(scrathces::panic_sim)
-            .service(scrathces::error_test)
-            .service(scrathces::echo_handle)
-            .route("/hello", web::get().to(scrathces::manual_hello))
+            .service(scratches::add_counter)
+            .service(scratches::panic_sim)
+            .service(scratches::error_test)
+            .service(scratches::echo_handle)
+            .route("/hello", web::get().to(scratches::manual_hello))
     );
     config_prod(cfg);
 }

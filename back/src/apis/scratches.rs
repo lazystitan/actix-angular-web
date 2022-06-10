@@ -12,7 +12,8 @@ pub async fn manual_hello() -> impl Responder {
 }
 
 #[get("/panic/{flag}")]
-pub async fn panic_sim(web::Path(flag): web::Path<bool>) -> AResult<HttpResponse, CustomError> {
+pub async fn panic_sim(info : web::Path<bool>) -> AResult<HttpResponse, CustomError> {
+    let flag = info.into_inner();
     if flag {
         Ok(HttpResponse::InternalServerError().finish())
     } else {
@@ -23,11 +24,10 @@ pub async fn panic_sim(web::Path(flag): web::Path<bool>) -> AResult<HttpResponse
 #[get("/session/add")]
 pub async fn add_counter(session: Session) -> AResult<HttpResponse> {
     if let Some(count) = session.get::<i32>("counter")? {
-        session.set("counter", count + 1)?;
+        session.insert("counter", count + 1)?;
     } else {
-        session.set("counter", 1)?;
+        session.insert("counter", 1)?;
     }
-
 
     Ok(HttpResponse::Ok().body(format!(
         "Count is {:?}",
@@ -36,7 +36,8 @@ pub async fn add_counter(session: Session) -> AResult<HttpResponse> {
 }
 
 #[get("/error_test/{id}")]
-pub async fn error_test(web::Path(id): web::Path<i32>) -> AResult<HttpResponse, CustomError> {
+pub async fn error_test(info: web::Path<i32>) -> AResult<HttpResponse, CustomError> {
+    let id = info.into_inner();
     match id {
         0 => {
             Err(CustomError::BadClientData("sadfsadf".to_string()))

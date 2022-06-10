@@ -29,7 +29,8 @@ pub async fn do_after_validation<F, I>(req: HttpRequest, data_service: sync::Arc
                 CustomError::InternalError("Internal error".to_string())
             }
         ) {
-            Ok(v) => {Ok(v)}
+            Ok(Ok(v)) => { Ok(v) }
+            Ok(Err(e)) => {Err(CustomError::InternalError(e.to_string()))}
             Err(e) => {Err(e)}
         }
     } else {
